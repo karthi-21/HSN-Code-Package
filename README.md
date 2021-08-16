@@ -1,5 +1,7 @@
 # HSN Code Package
 
+HSN code stands for “Harmonized System of Nomenclature”. This system has been introduced for the systematic classification of goods all over the world. HSN code is a 6-digit uniform code that classifies 5000+ products and is accepted worldwide. It was developed by the World Customs Organization (WCO) and it came into effect from 1988 [(more...)](https://cleartax.in/s/gst-hsn-lookup) 
+
 This package contains an HSN code list and has three methods to get results.
 
 ## Installation

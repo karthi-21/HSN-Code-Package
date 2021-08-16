@@ -1,6 +1,6 @@
 {
   "name": "hsn-code-package",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "This package contains an HSN code list and has three methods to get results.",
   "main": "index.js",
   "scripts": {
