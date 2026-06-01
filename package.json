@@ -1,23 +1,50 @@
 {
   "name": "hsn-code-package",
-  "version": "1.0.2",
-  "description": "This package contains an HSN code list and has three methods to get results.",
+  "version": "2.0.0",
+  "description": "Fast, zero-runtime-dependency HSN code lookup. Search 12,000+ codes by description or code number, validate HSN codes, and browse by chapter.",
   "main": "index.js",
+  "types": "index.d.ts",
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "data/"
+  ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest --coverage",
+    "build:data": "node scripts/build-data.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/karthi-21/HSN-Code-Package.git"
   },
-  "keywords": ["HSN Codes", "HSN List"],
+  "keywords": [
+    "HSN",
+    "HSN codes",
+    "HSN code list",
+    "GST",
+    "India GST",
+    "customs codes",
+    "HS codes",
+    "harmonized system",
+    "harmonized system nomenclature",
+    "product classification",
+    "tax codes",
+    "CBIC",
+    "WCO",
+    "commodity codes"
+  ],
   "author": "karthikeyan",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/karthi-21/HSN-Code-Package/issues"
   },
   "homepage": "https://github.com/karthi-21/HSN-Code-Package#readme",
-  "dependencies": {
-    "convert-excel-to-json": "^1.7.0"
+  "engines": {
+    "node": ">=14"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "convert-excel-to-json": "^1.7.0",
+    "jest": "^30.4.2"
   }
 }
