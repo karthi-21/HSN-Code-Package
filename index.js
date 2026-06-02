@@ -120,6 +120,8 @@ function getStats() {
     return require(path.join(__dirname, 'data', 'metadata.json'));
 }
 
+const gst = require('./gst');
+
 module.exports = {
     getAllHsn,
     getCodeByTxt,
@@ -128,5 +130,13 @@ module.exports = {
     isValidHsnCode,
     getHsnChapter,
     searchHsn,
-    getStats
+    getStats,
+    // GST calculation utilities (issue #3)
+    applyRoundOffRules: gst.applyRoundOffRules,
+    calculateTax: gst.calculateTax,
+    calculateGSTBreakdown: gst.calculateGSTBreakdown,
+    reverseCalculateTax: gst.reverseCalculateTax,
+    getApplicableTaxType: gst.getApplicableTaxType,
+    calculateInvoiceTotals: gst.calculateInvoiceTotals,
+    groupItemsByTaxRate: gst.groupItemsByTaxRate
 };
