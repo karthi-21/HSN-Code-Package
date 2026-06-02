@@ -239,6 +239,50 @@ getGSTINComponents('27AAPFU0939F1ZV');
 
 ---
 
+## GST rate data
+
+The package ships pre-built GST rate data sourced from **CBIC Notification No. 09/2025-CT(Rate)** (effective 22 Sep 2025). Rates are kept up-to-date via a weekly automated job.
+
+### `getGstRateByCode(code)`
+Returns the GST rate for an exact HSN code, or `null` if no rate is available.
+
+```js
+getGstRateByCode('52010011');
+// {
+//   code: '52010011',
+//   igstRate: 5,
+//   cgstRate: 2.5,
+//   sgstRate: 2.5,
+//   cessRate: 0,
+//   effectiveFrom: '2025-09-22',
+//   notificationRef: 'Notification No. 09/2025-CT(Rate)'
+// }
+```
+
+### `getHsnByExactCodeWithRate(code)`
+Returns the HSN entry merged with its GST rate data.
+
+```js
+getHsnByExactCodeWithRate('52010011');
+// { code: '52010011', description: '...', igstRate: 5, cgstRate: 2.5, ... }
+```
+
+### `getHsnByRateSlabs(igstRate)`
+Returns all HSN codes under a given IGST rate slab.
+
+```js
+getHsnByRateSlabs(5);   // All items taxed at 5% IGST
+getHsnByRateSlabs(18);  // All items taxed at 18% IGST
+```
+
+### Automated rate updates
+
+A GitHub Actions workflow runs every Monday at 08:00 UTC to check for and apply any CBIC rate changes. If the update fails, a GitHub issue is automatically opened.
+
+To manually trigger an update: **Actions → Update GST Rates → Run workflow**.
+
+---
+
 ## SAC codes (services)
 
 SAC (Services Accounting Code) lookups, backed by `data/sac_codes.json`.

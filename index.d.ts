@@ -63,6 +63,36 @@ export function findCodesByDescription(keywords: string[]): HsnCode[];
 /** Validates many HSN codes at once. */
 export function bulkValidateHsnCodes(codes: Array<string | number>): BulkValidationResult;
 
+// GST rate types
+export interface GstRate {
+    code: string;
+    igstRate: number;
+    cgstRate: number;
+    sgstRate: number;
+    cessRate: number;
+    rateSource: string;
+    effectiveFrom: string;
+    notificationRef: string;
+}
+
+export interface HsnCodeWithRate extends HsnCode {
+    igstRate?: number;
+    cgstRate?: number;
+    sgstRate?: number;
+    cessRate?: number;
+    rateSource?: string;
+    effectiveFrom?: string;
+}
+
+/** Returns GST rate details for an exact HSN code, or null if not found. */
+export function getGstRateByCode(code: string | number): GstRate | null;
+
+/** Returns the HSN entry merged with its GST rate, or undefined if code not found. */
+export function getHsnByExactCodeWithRate(code: string | number): HsnCodeWithRate | undefined;
+
+/** Returns all HSN codes that fall under a given IGST rate slab (e.g. 5, 18). */
+export function getHsnByRateSlabs(igstRate: number): HsnCode[];
+
 // GSTIN types
 export interface GSTINValidationResult {
     isValid: boolean;

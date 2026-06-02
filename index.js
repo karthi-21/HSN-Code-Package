@@ -11,6 +11,14 @@ function _load() {
     return _cache;
 }
 
+let _ratesCache = null;
+function _loadRates() {
+    if (!_ratesCache) {
+        _ratesCache = require(path.join(__dirname, 'data', 'gst_rates.json'));
+    }
+    return _ratesCache;
+}
+
 function _assertString(value, name) {
     if (value === null || value === undefined) {
         throw new TypeError(`${name} must be a string, got ${value}`);
@@ -171,6 +179,43 @@ function bulkValidateHsnCodes(codes) {
     return { valid, invalid, summary: { total: codes.length, validCount: valid.length, invalidCount: invalid.length } };
 }
 
+/**
+ * Returns GST rate details for an exact HSN code, or null if not found.
+ * @param {string|number} code
+ * @returns {object|null}
+ */
+function getGstRateByCode(code) {
+    _assertString(code, 'code');
+    const q = String(code).trim();
+    const rates = _loadRates();
+    return rates.find(r => r.code === q) || null;
+}
+
+/**
+ * Returns the HSN entry merged with its GST rate, or undefined if code not found.
+ * @param {string|number} code
+ * @returns {object|undefined}
+ */
+function getHsnByExactCodeWithRate(code) {
+    _assertString(code, 'code');
+    const entry = getHsnByExactCode(code);
+    if (!entry) return undefined;
+    const rate = getGstRateByCode(code);
+    return rate ? { ...entry, ...rate } : entry;
+}
+
+/**
+ * Returns all HSN codes that fall under a given IGST rate slab (e.g. 5, 18).
+ * @param {number} igstRate
+ * @returns {Array<{code: string, description: string}>}
+ */
+function getHsnByRateSlabs(igstRate) {
+    if (typeof igstRate !== 'number') throw new TypeError('igstRate must be a number');
+    const rates = _loadRates();
+    const matchingCodes = new Set(rates.filter(r => r.igstRate === igstRate).map(r => r.code));
+    return _load().filter(item => matchingCodes.has(item.code));
+}
+
 const gstin = require('./gstin');
 const sac = require('./sac');
 const exportUtils = require('./export');
@@ -188,6 +233,10 @@ module.exports = {
     getChapterSummary,
     findCodesByDescription,
     bulkValidateHsnCodes,
+    // GST rates
+    getGstRateByCode,
+    getHsnByExactCodeWithRate,
+    getHsnByRateSlabs,
     // GSTIN
     validateGSTIN: gstin.validateGSTIN,
     formatGSTIN: gstin.formatGSTIN,
