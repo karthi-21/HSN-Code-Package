@@ -1,12 +1,19 @@
 {
   "name": "hsn-code-package",
-  "version": "2.0.0",
+  "version": "2.2.0",
   "description": "Fast, zero-runtime-dependency HSN code lookup. Search 12,000+ codes by description or code number, validate HSN codes, and browse by chapter.",
   "main": "index.js",
   "types": "index.d.ts",
+  "bin": {
+    "hsn": "bin/cli.js"
+  },
   "files": [
     "index.js",
     "index.d.ts",
+    "gstin.js",
+    "sac.js",
+    "export.js",
+    "bin/",
     "data/"
   ],
   "scripts": {
