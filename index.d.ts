@@ -6,6 +6,8 @@
  * export helpers. All types are bundled — no `@types` package is required.
  *
  * @packageDocumentation
+ * @author Karthikeyan (https://karthi-21.com/)
+ * @see https://hsn-gst-demo.karthi-21.com/ Live demo
  */
 
 export interface HsnCode {

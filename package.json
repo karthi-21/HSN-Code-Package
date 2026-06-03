@@ -48,12 +48,15 @@
     "harmonized-system",
     "customs"
   ],
-  "author": "karthikeyan",
+  "author": {
+    "name": "Karthikeyan",
+    "url": "https://karthi-21.com/"
+  },
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/karthi-21/HSN-Code-Package/issues"
   },
-  "homepage": "https://github.com/karthi-21/HSN-Code-Package#readme",
+  "homepage": "https://hsn-gst-demo.karthi-21.com/",
   "engines": {
     "node": ">=14"
   },

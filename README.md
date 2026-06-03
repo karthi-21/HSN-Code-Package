@@ -5,7 +5,11 @@
 [![npm version](https://img.shields.io/npm/v/hsn-code-package.svg)](https://www.npmjs.com/package/hsn-code-package)
 [![node](https://img.shields.io/node/v/hsn-code-package.svg)](https://nodejs.org)
 
+**[🚀 Live Demo](https://hsn-gst-demo.karthi-21.com/)** — See every feature in action, no setup needed.
+
 ## What is this?
+
+> Try it live at **[hsn-gst-demo.karthi-21.com](https://hsn-gst-demo.karthi-21.com/)** before installing.
 
 `hsn-code-package` bundles the full CBIC/WCO Harmonized System Nomenclature (HSN) code list along with Service Accounting Codes (SAC) and a set of pure utility functions for GST work in India. It has **no runtime dependencies** — the data ships as JSON inside the package and everything runs on the Node.js standard library.
 
@@ -62,6 +66,7 @@ hsn.validateGSTIN('27AAPFU0939F1ZV');
 - [TypeScript](#typescript)
 - [Data sources & update schedule](#data-sources--update-schedule)
 - [Migrating from v1 / v2.x](#migrating-from-v1--v2x)
+- [Live demo](#live-demo)
 - [Contributing](#contributing)
 
 ---
@@ -470,6 +475,16 @@ Rates are provided as a developer convenience and classified at chapter granular
 | v2.3      | Added GST rate data (`getGstRateByCode`, `getHsnByExactCodeWithRate`, `getHsnByRateSlabs`) and advanced HSN lookups. No breaking changes. |
 
 No function signatures or return shapes changed within the 2.x line — upgrades are additive.
+
+## Live demo
+
+**[https://hsn-gst-demo.karthi-21.com/](https://hsn-gst-demo.karthi-21.com/)**
+
+An interactive showcase built on top of this package — try HSN lookups, GSTIN validation, GST calculations, SAC search, invoice generation, and CSV export right in the browser. No installation required.
+
+## Author
+
+Built and maintained by **[Karthikeyan](https://karthi-21.com/)**.
 
 ## Contributing
 
