@@ -152,6 +152,58 @@ getStats();
 
 ---
 
+## GST calculation utilities
+
+Pure, zero-dependency helpers for GST tax math. These are **rate-agnostic** — you pass the GST rate in (automatic rate lookup from HSN codes is tracked in a separate enhancement).
+
+### `calculateTax(taxableAmount, rate)`
+```js
+calculateTax(10000, 18);
+// { taxableAmount: 10000, rate: 18, taxAmount: 1800, total: 11800 }
+```
+
+### `calculateGSTBreakdown(taxableAmount, gstRate, options?)`
+Splits GST into CGST/SGST (intra-state) or IGST (inter-state), with optional cess.
+```js
+calculateGSTBreakdown(10000, 18);
+// { taxableAmount: 10000, cgst: 900, sgst: 900, igst: 0, cess: 0, totalTax: 1800, grandTotal: 11800 }
+
+calculateGSTBreakdown(10000, 28, { isInterState: true, cessRate: 25 });
+// { ..., igst: 2800, cess: 2500, totalTax: 5300, grandTotal: 15300 }
+```
+
+### `reverseCalculateTax(grandTotal, rate)`
+Extracts base + tax from a tax-inclusive amount.
+```js
+reverseCalculateTax(11800, 18);
+// { grandTotal: 11800, rate: 18, taxableAmount: 10000, taxAmount: 1800 }
+```
+
+### `getApplicableTaxType(supplierStateCode, placeOfSupplyStateCode)`
+```js
+getApplicableTaxType('33', '33'); // 'CGST_SGST'
+getApplicableTaxType('33', '29'); // 'IGST'
+```
+
+### `calculateInvoiceTotals(items, isInterState)`
+Sums line items into invoice totals with GST round-off.
+```js
+calculateInvoiceTotals([
+  { taxableValue: 10000, gstRate: 18 },
+  { taxableValue: 5000, gstRate: 12 }
+], false);
+// { totalTaxableValue: 15000, totalCGST: 1200, totalSGST: 1200, totalIGST: 0,
+//   totalCess: 0, totalTax: 2400, grandTotal: 17400, roundOff: 0 }
+```
+
+### `groupItemsByTaxRate(items)`
+Groups line items by GST rate (useful for GSTR-1 summaries).
+
+### `applyRoundOffRules(amount)`
+Rounds a monetary amount to 2 decimals (half-up).
+
+---
+
 ## TypeScript
 
 Type definitions are bundled. No `@types/` package needed.
