@@ -204,6 +204,188 @@ Rounds a monetary amount to 2 decimals (half-up).
 
 ---
 
+## Advanced HSN lookups
+
+### `getChapterSummary(chapter)`
+Returns a summary for a chapter (code count, range, and the full list), or `null` if the chapter has no codes.
+
+```js
+const { getChapterSummary } = require('hsn-code-package');
+
+getChapterSummary('52');
+// {
+//   chapter: '52',
+//   totalCodes: 120,
+//   codeRange: { from: '52010011', to: '52129990' },
+//   codes: [ { code, description }, ... ]
+// }
+```
+
+### `findCodesByDescription(keywords)`
+Returns codes whose description contains **all** of the supplied keywords (AND match).
+
+```js
+const { findCodesByDescription } = require('hsn-code-package');
+
+findCodesByDescription(['cotton', 'carded']);
+// All codes mentioning both "cotton" and "carded"
+```
+
+### `bulkValidateHsnCodes(codes)`
+Validates many codes at once.
+
+```js
+const { bulkValidateHsnCodes } = require('hsn-code-package');
+
+bulkValidateHsnCodes(['52010011', '00000000']);
+// {
+//   valid:   ['52010011'],
+//   invalid: ['00000000'],
+//   summary: { total: 2, validCount: 1, invalidCount: 1 }
+// }
+```
+
+---
+
+## GSTIN & PAN validation
+
+```js
+const {
+  validateGSTIN, formatGSTIN, getStateFromGSTIN, isValidPAN, getGSTINComponents
+} = require('hsn-code-package');
+```
+
+### `validateGSTIN(gstin)`
+Validates a GSTIN structurally and via its MOD-36 checksum. Returns a result object.
+
+```js
+validateGSTIN('27AAPFU0939F1ZV');
+// {
+//   isValid: true,
+//   stateCode: '27',
+//   stateName: 'Maharashtra',
+//   panNumber: 'AAPFU0939F',
+//   entityNumber: '1',
+//   checkDigit: 'V'
+// }
+
+validateGSTIN('27AAPFU0939F1Z'); // { isValid: false, error: 'GSTIN must be 15 characters, got 14' }
+```
+
+### `isValidPAN(pan)`
+Returns `true` for a structurally valid PAN (`AAAAA0000A`).
+
+```js
+isValidPAN('AAPFU0939F'); // true
+isValidPAN('12345');      // false
+```
+
+### `formatGSTIN(gstin)` / `getStateFromGSTIN(gstin)` / `getGSTINComponents(gstin)`
+
+```js
+formatGSTIN('  27aapfu0939f1zv  '); // '27AAPFU0939F1ZV'
+getStateFromGSTIN('27AAPFU0939F1ZV'); // 'Maharashtra'
+getGSTINComponents('27AAPFU0939F1ZV');
+// { stateCode: '27', stateName: 'Maharashtra', pan: 'AAPFU0939F', entityNumber: '1', checkDigit: 'V' }
+```
+
+---
+
+## GST rate data
+
+The package ships pre-built GST rate data sourced from **CBIC Notification No. 09/2025-CT(Rate)** (effective 22 Sep 2025). Rates are kept up-to-date via a weekly automated job.
+
+### `getGstRateByCode(code)`
+Returns the GST rate for an exact HSN code, or `null` if no rate is available.
+
+```js
+getGstRateByCode('52010011');
+// {
+//   code: '52010011',
+//   igstRate: 5,
+//   cgstRate: 2.5,
+//   sgstRate: 2.5,
+//   cessRate: 0,
+//   effectiveFrom: '2025-09-22',
+//   notificationRef: 'Notification No. 09/2025-CT(Rate)'
+// }
+```
+
+### `getHsnByExactCodeWithRate(code)`
+Returns the HSN entry merged with its GST rate data.
+
+```js
+getHsnByExactCodeWithRate('52010011');
+// { code: '52010011', description: '...', igstRate: 5, cgstRate: 2.5, ... }
+```
+
+### `getHsnByRateSlabs(igstRate)`
+Returns all HSN codes under a given IGST rate slab.
+
+```js
+getHsnByRateSlabs(5);   // All items taxed at 5% IGST
+getHsnByRateSlabs(18);  // All items taxed at 18% IGST
+```
+
+### Automated rate updates
+
+A GitHub Actions workflow runs every Monday at 08:00 UTC to check for and apply any CBIC rate changes. If the update fails, a GitHub issue is automatically opened.
+
+To manually trigger an update: **Actions → Update GST Rates → Run workflow**.
+
+---
+
+## SAC codes (services)
+
+SAC (Services Accounting Code) lookups, backed by `data/sac_codes.json`.
+
+```js
+const { getAllSac, getSacByCode, searchSac, getCodeDetails } = require('hsn-code-package');
+
+getSacByCode('9954');      // { code: '9954', description: 'Construction services' }
+searchSac('education', { limit: 5 });
+getCodeDetails('9954');    // { code, description, type: 'SAC' }
+getCodeDetails('52010011');// { code, description, type: 'HSN' }
+```
+
+---
+
+## Export utilities
+
+```js
+const { exportToCSV, exportToJSON, generateGSTR1Summary } = require('hsn-code-package');
+
+exportToCSV([{ code: '52010011', description: 'COTTON' }]);
+// "code,description\n52010011,COTTON"
+
+exportToJSON(getSacByCode('9954'), { pretty: true });
+
+generateGSTR1Summary([
+  { taxableValue: 10000, gstRate: 18, isInterState: false },
+  { taxableValue: 3000,  gstRate: 12, isInterState: false }
+]);
+// Tax-rate-wise breakdown with cgst/sgst/igst/cess/totalTax
+```
+
+---
+
+## CLI
+
+A `hsn` command is installed with the package (or run via `npx hsn`).
+
+```bash
+hsn search cotton --limit 10
+hsn validate 52010011
+hsn chapter 52
+hsn stats
+hsn gstin 27AAPFU0939F1ZV
+hsn sac education --limit 5
+hsn export silk --format csv
+hsn help
+```
+
+---
+
 ## TypeScript
 
 Type definitions are bundled. No `@types/` package needed.

@@ -1,13 +1,20 @@
 {
   "name": "hsn-code-package",
-  "version": "2.1.0",
-  "description": "Fast, zero-runtime-dependency HSN code lookup with GST calculation utilities. Search 12,000+ codes, validate HSN codes, browse by chapter, and compute CGST/SGST/IGST.",
+  "version": "2.3.0",
+  "description": "Fast, zero-runtime-dependency HSN code lookup with full GST toolkit. Search 12,000+ codes, validate HSN/GSTIN, browse SAC codes, compute CGST/SGST/IGST, and export data.",
   "main": "index.js",
   "types": "index.d.ts",
+  "bin": {
+    "hsn": "bin/cli.js"
+  },
   "files": [
     "index.js",
     "gst.js",
     "index.d.ts",
+    "gstin.js",
+    "sac.js",
+    "export.js",
+    "bin/",
     "data/"
   ],
   "scripts": {
@@ -43,9 +50,9 @@
   "engines": {
     "node": ">=14"
   },
-  "dependencies": {},
   "devDependencies": {
     "convert-excel-to-json": "^1.7.0",
-    "jest": "^30.4.2"
+    "jest": "^30.4.2",
+    "xlsx": "^0.18.5"
   }
 }
