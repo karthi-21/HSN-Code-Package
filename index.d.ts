@@ -6,6 +6,7 @@
  * export helpers. All types are bundled — no `@types` package is required.
  *
  * @packageDocumentation
+ * @author Karthikeyan (https://karthi-21.com/)
  */
 
 export interface HsnCode {

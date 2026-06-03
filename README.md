@@ -471,6 +471,10 @@ Rates are provided as a developer convenience and classified at chapter granular
 
 No function signatures or return shapes changed within the 2.x line — upgrades are additive.
 
+## Author
+
+Built and maintained by **[Karthikeyan](https://karthi-21.com/)**.
+
 ## Contributing
 
 Issues and pull requests are welcome at the [GitHub repository](https://github.com/karthi-21/HSN-Code-Package).
