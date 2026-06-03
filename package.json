@@ -1,7 +1,7 @@
 {
   "name": "hsn-code-package",
   "version": "2.3.0",
-  "description": "Fast, zero-runtime-dependency HSN code lookup. Search 12,000+ codes by description or code number, validate HSN codes, and browse by chapter.",
+  "description": "Fast, zero-runtime-dependency HSN code lookup with full GST toolkit. Search 12,000+ codes, validate HSN/GSTIN, browse SAC codes, compute CGST/SGST/IGST, and export data.",
   "main": "index.js",
   "types": "index.d.ts",
   "bin": {
@@ -9,6 +9,7 @@
   },
   "files": [
     "index.js",
+    "gst.js",
     "index.d.ts",
     "gstin.js",
     "sac.js",

@@ -128,6 +128,11 @@ function getStats() {
     return require(path.join(__dirname, 'data', 'metadata.json'));
 }
 
+const gst = require('./gst');
+const gstin = require('./gstin');
+const sac = require('./sac');
+const exportUtils = require('./export');
+
 /**
  * Returns a summary of all HSN codes within a chapter (first two digits).
  * @param {string|number} chapter
@@ -216,9 +221,6 @@ function getHsnByRateSlabs(igstRate) {
     return _load().filter(item => matchingCodes.has(item.code));
 }
 
-const gstin = require('./gstin');
-const sac = require('./sac');
-const exportUtils = require('./export');
 
 module.exports = {
     getAllHsn,
@@ -233,6 +235,14 @@ module.exports = {
     getChapterSummary,
     findCodesByDescription,
     bulkValidateHsnCodes,
+    // GST calculation utilities
+    applyRoundOffRules: gst.applyRoundOffRules,
+    calculateTax: gst.calculateTax,
+    calculateGSTBreakdown: gst.calculateGSTBreakdown,
+    reverseCalculateTax: gst.reverseCalculateTax,
+    getApplicableTaxType: gst.getApplicableTaxType,
+    calculateInvoiceTotals: gst.calculateInvoiceTotals,
+    groupItemsByTaxRate: gst.groupItemsByTaxRate,
     // GST rates
     getGstRateByCode,
     getHsnByExactCodeWithRate,

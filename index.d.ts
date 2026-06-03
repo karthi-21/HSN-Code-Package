@@ -44,7 +44,63 @@ export function searchHsn(query: string, options?: SearchOptions): HsnCode[];
 /** Returns metadata about the bundled dataset (version, date, totals). */
 export function getStats(): HsnStats;
 
-// Advanced HSN lookups
+// ── GST calculation utilities ────────────────────────────────────────────────
+
+export interface TaxResult {
+    taxableAmount: number;
+    rate: number;
+    taxAmount: number;
+    total: number;
+}
+
+export interface GSTBreakdown {
+    taxableAmount: number;
+    cgst: number;
+    sgst: number;
+    igst: number;
+    cess: number;
+    totalTax: number;
+    grandTotal: number;
+}
+
+export interface ReverseTaxResult {
+    grandTotal: number;
+    rate: number;
+    taxableAmount: number;
+    taxAmount: number;
+}
+
+export interface InvoiceLineItem {
+    taxableValue: number;
+    gstRate: number;
+    cessRate?: number;
+}
+
+export interface InvoiceTotals {
+    totalTaxableValue: number;
+    totalCGST: number;
+    totalSGST: number;
+    totalIGST: number;
+    totalCess: number;
+    totalTax: number;
+    grandTotal: number;
+    roundOff: number;
+}
+
+export interface GSTBreakdownOptions {
+    isInterState?: boolean;
+    cessRate?: number;
+}
+
+export function applyRoundOffRules(amount: number): number;
+export function calculateTax(taxableAmount: number, rate: number): TaxResult;
+export function calculateGSTBreakdown(taxableAmount: number, gstRate: number, options?: GSTBreakdownOptions): GSTBreakdown;
+export function reverseCalculateTax(grandTotal: number, rate: number): ReverseTaxResult;
+export function getApplicableTaxType(supplierStateCode: string, placeOfSupplyStateCode: string): 'IGST' | 'CGST_SGST';
+export function calculateInvoiceTotals(items: InvoiceLineItem[], isInterState: boolean): InvoiceTotals;
+export function groupItemsByTaxRate<T extends { gstRate: number }>(items: T[]): Record<string, T[]>;
+
+// ── Advanced HSN lookups ──────────────────────────────────────────────────────
 export interface ChapterSummary {
     chapter: string;
     totalCodes: number;
