@@ -1,37 +1,52 @@
 {
   "name": "hsn-code-package",
-  "version": "2.0.0",
-  "description": "Fast, zero-runtime-dependency HSN code lookup. Search 12,000+ codes by description or code number, validate HSN codes, and browse by chapter.",
+  "version": "2.3.0",
+  "description": "Fast, zero-runtime-dependency HSN code lookup with full GST toolkit. Search 12,000+ codes, validate HSN/GSTIN, browse SAC codes, compute CGST/SGST/IGST, and export data.",
   "main": "index.js",
   "types": "index.d.ts",
+  "bin": {
+    "hsn": "bin/cli.js"
+  },
   "files": [
     "index.js",
-    "index.d.ts",
-    "data/"
+    "gst.js",
+    "gstin.js",
+    "sac.js",
+    "export.js",
+    "bin/",
+    "data/",
+    "index.d.ts"
   ],
   "scripts": {
     "test": "jest --coverage",
-    "build:data": "node scripts/build-data.js"
+    "typecheck": "tsc --noEmit --strict --moduleResolution node --target ES2020 --lib ES2020 tests/types.test.ts",
+    "build:data": "node scripts/build-data.js",
+    "update:rates": "node scripts/update-gst-rates.js"
+  },
+  "jest": {
+    "testMatch": [
+      "**/tests/**/*.test.js"
+    ]
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/karthi-21/HSN-Code-Package.git"
   },
   "keywords": [
-    "HSN",
-    "HSN codes",
-    "HSN code list",
-    "GST",
-    "India GST",
-    "customs codes",
-    "HS codes",
-    "harmonized system",
-    "harmonized system nomenclature",
-    "product classification",
-    "tax codes",
-    "CBIC",
-    "WCO",
-    "commodity codes"
+    "hsn",
+    "hsn-codes",
+    "gst",
+    "gstin",
+    "sac-codes",
+    "india",
+    "tax",
+    "cbic",
+    "invoice",
+    "igst",
+    "cgst",
+    "sgst",
+    "harmonized-system",
+    "customs"
   ],
   "author": "karthikeyan",
   "license": "ISC",
@@ -42,9 +57,10 @@
   "engines": {
     "node": ">=14"
   },
-  "dependencies": {},
   "devDependencies": {
     "convert-excel-to-json": "^1.7.0",
-    "jest": "^30.4.2"
+    "jest": "^30.4.2",
+    "typescript": "^5.9.3",
+    "xlsx": "^0.18.5"
   }
 }

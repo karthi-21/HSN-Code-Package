@@ -1,0 +1,1986 @@
+[
+  {
+    "code": "9954",
+    "description": "Construction services"
+  },
+  {
+    "code": "9961",
+    "description": "Services in wholesale trade"
+  },
+  {
+    "code": "9962",
+    "description": "Services in retail trade"
+  },
+  {
+    "code": "9963",
+    "description": "Accommodation, food and beverage services"
+  },
+  {
+    "code": "9964",
+    "description": "Passenger transport services"
+  },
+  {
+    "code": "9965",
+    "description": "Goods transport services"
+  },
+  {
+    "code": "9966",
+    "description": "Rental services of transport vehicles with operators"
+  },
+  {
+    "code": "9967",
+    "description": "Supporting services in transport"
+  },
+  {
+    "code": "9968",
+    "description": "Postal and courier services"
+  },
+  {
+    "code": "9969",
+    "description": "Electricity, gas, water and other distribution services"
+  },
+  {
+    "code": "9971",
+    "description": "Financial and related services"
+  },
+  {
+    "code": "9972",
+    "description": "Real estate services"
+  },
+  {
+    "code": "9973",
+    "description": "Leasing or rental services"
+  },
+  {
+    "code": "9981",
+    "description": "Research and development services"
+  },
+  {
+    "code": "9982",
+    "description": "Legal and accounting services"
+  },
+  {
+    "code": "9983",
+    "description": "Other professional, technical and business services"
+  },
+  {
+    "code": "9984",
+    "description": "Telecommunications, broadcasting and information supply services"
+  },
+  {
+    "code": "9985",
+    "description": "Support services"
+  },
+  {
+    "code": "9986",
+    "description": "Support services to agriculture, hunting, forestry, fishing, mining and utilities"
+  },
+  {
+    "code": "9987",
+    "description": "Maintenance, repair and installation services"
+  },
+  {
+    "code": "9988",
+    "description": "Manufacturing services on physical inputs owned by others"
+  },
+  {
+    "code": "9989",
+    "description": "Other manufacturing services; publishing, printing and reproduction services"
+  },
+  {
+    "code": "9991",
+    "description": "Public administration and other services provided to the community as a whole"
+  },
+  {
+    "code": "9992",
+    "description": "Education services"
+  },
+  {
+    "code": "9993",
+    "description": "Human health and social care services"
+  },
+  {
+    "code": "9994",
+    "description": "Sewage and waste collection, treatment and disposal and other environmental protection services"
+  },
+  {
+    "code": "9995",
+    "description": "Services of membership organisations"
+  },
+  {
+    "code": "9996",
+    "description": "Recreational, cultural and sporting services"
+  },
+  {
+    "code": "9997",
+    "description": "Other services"
+  },
+  {
+    "code": "9998",
+    "description": "Domestic services"
+  },
+  {
+    "code": "9999",
+    "description": "Services provided by extraterritorial organisations and bodies"
+  },
+  {
+    "code": "995411",
+    "description": "Construction services of single dwelling or multi dwelling or multi-storied residential buildings"
+  },
+  {
+    "code": "995412",
+    "description": "Construction services of other residential buildings such as old age homes, homeless shelters, hostels"
+  },
+  {
+    "code": "995413",
+    "description": "Construction services of industrial buildings such as buildings used for production activities"
+  },
+  {
+    "code": "995414",
+    "description": "Construction services of commercial buildings such as office buildings, exhibition and marriage halls, malls, hotels, restaurants"
+  },
+  {
+    "code": "995415",
+    "description": "Construction services of other non-residential buildings such as educational institutions, hospitals, clinics"
+  },
+  {
+    "code": "995416",
+    "description": "Construction services of other buildings not elsewhere classified"
+  },
+  {
+    "code": "995417",
+    "description": "Services involving repair, alterations, additions, replacements, renovation of buildings"
+  },
+  {
+    "code": "995418",
+    "description": "Services involving repair, alterations, additions, replacements, maintenance of the prefabricated buildings"
+  },
+  {
+    "code": "995419",
+    "description": "Services involving repair, alterations, additions, maintenance of construction works covered above"
+  },
+  {
+    "code": "995421",
+    "description": "General construction services of highways, streets, roads, railways and airfield runways, bridges and tunnels"
+  },
+  {
+    "code": "995422",
+    "description": "General construction services of harbours, waterways, dams, water mains and lines, irrigation and other waterworks"
+  },
+  {
+    "code": "995423",
+    "description": "General construction services of long-distance underground/overland/submarine pipelines, communication and electric power lines"
+  },
+  {
+    "code": "995424",
+    "description": "General construction services of local water and sewage pipelines, electricity and communication cables and related works"
+  },
+  {
+    "code": "995425",
+    "description": "General construction services of mines and industrial plants"
+  },
+  {
+    "code": "995426",
+    "description": "General construction services of power plants and its related infrastructure"
+  },
+  {
+    "code": "995427",
+    "description": "General construction services of outdoor sport and recreation facilities"
+  },
+  {
+    "code": "995428",
+    "description": "General construction services of other civil engineering works not elsewhere classified"
+  },
+  {
+    "code": "995429",
+    "description": "Services involving repair, alterations, additions, maintenance of civil engineering works"
+  },
+  {
+    "code": "995431",
+    "description": "Demolition services"
+  },
+  {
+    "code": "995432",
+    "description": "Site formation and clearance services including preparation services to make sites ready for subsequent construction work"
+  },
+  {
+    "code": "995433",
+    "description": "Excavating and earthmoving services"
+  },
+  {
+    "code": "995434",
+    "description": "Water well drilling services and septic system installation services"
+  },
+  {
+    "code": "995435",
+    "description": "Other site preparation services not elsewhere classified"
+  },
+  {
+    "code": "995441",
+    "description": "Installation, assembly and erection services of prefabricated buildings"
+  },
+  {
+    "code": "995442",
+    "description": "Installation, assembly and erection services of other prefabricated structures and constructions"
+  },
+  {
+    "code": "995443",
+    "description": "Installation services of all types of street furniture (bus shelters, benches, telephone booths, public toilets etc.)"
+  },
+  {
+    "code": "995444",
+    "description": "Other assembly and erection services not elsewhere classified"
+  },
+  {
+    "code": "995451",
+    "description": "Pile driving and foundation services"
+  },
+  {
+    "code": "995452",
+    "description": "Building framing and roof framing services"
+  },
+  {
+    "code": "995453",
+    "description": "Roofing and waterproofing services"
+  },
+  {
+    "code": "995454",
+    "description": "Concrete services"
+  },
+  {
+    "code": "995455",
+    "description": "Structural steel erection services"
+  },
+  {
+    "code": "995456",
+    "description": "Masonry services"
+  },
+  {
+    "code": "995457",
+    "description": "Scaffolding services"
+  },
+  {
+    "code": "995458",
+    "description": "Other special trade construction services not elsewhere classified"
+  },
+  {
+    "code": "995461",
+    "description": "Electrical installation services including electrical wiring and fitting services, fire alarm installation, burglar alarm system installation"
+  },
+  {
+    "code": "995462",
+    "description": "Water plumbing and drain laying services"
+  },
+  {
+    "code": "995463",
+    "description": "Heating, ventilation and air conditioning equipment installation services"
+  },
+  {
+    "code": "995464",
+    "description": "Gas fitting installation services"
+  },
+  {
+    "code": "995465",
+    "description": "Insulation services"
+  },
+  {
+    "code": "995466",
+    "description": "Lift and escalator installation services"
+  },
+  {
+    "code": "995468",
+    "description": "Other installation services not elsewhere classified"
+  },
+  {
+    "code": "995471",
+    "description": "Glazing services"
+  },
+  {
+    "code": "995472",
+    "description": "Plastering services"
+  },
+  {
+    "code": "995473",
+    "description": "Painting services"
+  },
+  {
+    "code": "995474",
+    "description": "Floor and wall tiling services"
+  },
+  {
+    "code": "995475",
+    "description": "Other floor laying, wall covering and wall papering services"
+  },
+  {
+    "code": "995476",
+    "description": "Joinery and carpentry services"
+  },
+  {
+    "code": "995477",
+    "description": "Fencing and railing services"
+  },
+  {
+    "code": "995478",
+    "description": "Other building completion and finishing services not elsewhere classified"
+  },
+  {
+    "code": "995479",
+    "description": "Services involving repair, alterations, additions, maintenance of installation, completion and finishing works"
+  },
+  {
+    "code": "996111",
+    "description": "Services provided for a fee or commission or on contract basis on wholesale trade"
+  },
+  {
+    "code": "996112",
+    "description": "Services provided for a fee or commission or on contract basis on retail trade"
+  },
+  {
+    "code": "996211",
+    "description": "Non-specialized store retail trade services"
+  },
+  {
+    "code": "996212",
+    "description": "Specialized store retail trade services"
+  },
+  {
+    "code": "996213",
+    "description": "Mail order retail trade services"
+  },
+  {
+    "code": "996214",
+    "description": "Other non-store retail trade services"
+  },
+  {
+    "code": "996311",
+    "description": "Room or unit accommodation services provided by Hotels, Inn, Guest House, Club and the like"
+  },
+  {
+    "code": "996312",
+    "description": "Camp site services"
+  },
+  {
+    "code": "996313",
+    "description": "Recreational and vacation camp services"
+  },
+  {
+    "code": "996321",
+    "description": "Room or unit accommodation services for students in student residences"
+  },
+  {
+    "code": "996322",
+    "description": "Room or unit accommodation services provided by Hostels, Camps, Paying Guest and the like"
+  },
+  {
+    "code": "996331",
+    "description": "Services provided by Restaurants, Cafes and similar eating facilities including takeaway services, room services and door delivery of food"
+  },
+  {
+    "code": "996332",
+    "description": "Services provided by Hotels, Inn, Guest House, Club etc including Room services, takeaway services and door delivery of food"
+  },
+  {
+    "code": "996333",
+    "description": "Services provided in Canteen and other similar establishments"
+  },
+  {
+    "code": "996334",
+    "description": "Catering services in exhibition halls, events, marriage halls and other outdoor/indoor functions"
+  },
+  {
+    "code": "996335",
+    "description": "Catering services in trains, flights and the like"
+  },
+  {
+    "code": "996336",
+    "description": "Preparation and/or supply services of food, edible preparations, alcoholic and non-alcoholic beverages to airlines and other transportation operators"
+  },
+  {
+    "code": "996411",
+    "description": "Local land transport services of passengers by railways, metro, monorail, bus, tramway, autos, three wheelers, scooters and other motor vehicles"
+  },
+  {
+    "code": "996412",
+    "description": "Taxi services including radio taxi and other similar services"
+  },
+  {
+    "code": "996413",
+    "description": "Non-scheduled local bus and coach charter services"
+  },
+  {
+    "code": "996414",
+    "description": "Other land transportation services of passengers"
+  },
+  {
+    "code": "996415",
+    "description": "Local water transport services of passengers by ferries, cruises and the like"
+  },
+  {
+    "code": "996421",
+    "description": "Long-distance transport services of passengers through rail network by railways, metro and the like"
+  },
+  {
+    "code": "996422",
+    "description": "Long-distance transport services of passengers through road by bus, car, non-scheduled long distance bus and coach services"
+  },
+  {
+    "code": "996423",
+    "description": "Taxi services including radio taxi and other similar services for long distance transport of passengers"
+  },
+  {
+    "code": "996424",
+    "description": "Coastal and transoceanic (overseas) water transport services of passengers by ferries, cruise ships and the like"
+  },
+  {
+    "code": "996425",
+    "description": "Domestic scheduled air transport services of passengers"
+  },
+  {
+    "code": "996426",
+    "description": "Domestic non-scheduled air transport services of passengers"
+  },
+  {
+    "code": "996427",
+    "description": "International scheduled air transport services of passengers"
+  },
+  {
+    "code": "996428",
+    "description": "International non-scheduled air transport services of passengers"
+  },
+  {
+    "code": "996511",
+    "description": "Road transport services of goods including letters, parcels, live animals, household and office furniture, containers etc by refrigerator vehicles, trucks, trailers, man or animal drawn vehicles"
+  },
+  {
+    "code": "996512",
+    "description": "Railway transport services of goods including letters, parcels, live animals, household and office furniture, intermodal containers, bulk cargo etc"
+  },
+  {
+    "code": "996513",
+    "description": "Transport services of petroleum and natural gas, water, sewerage and other goods via pipeline"
+  },
+  {
+    "code": "996521",
+    "description": "Coastal and transoceanic (overseas) water transport services of goods by refrigerator vessels, tankers, bulk cargo vessels, container ships and the like"
+  },
+  {
+    "code": "996522",
+    "description": "Inland water transport services of goods by refrigerator vessels, tankers and other vessels"
+  },
+  {
+    "code": "996531",
+    "description": "Air transport services of letters and parcels and other goods"
+  },
+  {
+    "code": "996532",
+    "description": "Space transport services of freight"
+  },
+  {
+    "code": "996601",
+    "description": "Rental services of road vehicles including buses, coaches, cars, trucks and other motor vehicles, with operator"
+  },
+  {
+    "code": "996602",
+    "description": "Rental services of water vessels including passenger vessels, freight vessels and the like, with operator"
+  },
+  {
+    "code": "996603",
+    "description": "Rental services of aircraft including passenger aircrafts, freight aircrafts and the like, with operator"
+  },
+  {
+    "code": "996609",
+    "description": "Rental services of other transport vehicles not elsewhere classified, with operator"
+  },
+  {
+    "code": "996711",
+    "description": "Container handling services"
+  },
+  {
+    "code": "996712",
+    "description": "Customs House Agent services"
+  },
+  {
+    "code": "996713",
+    "description": "Clearing and forwarding services"
+  },
+  {
+    "code": "996719",
+    "description": "Other cargo and baggage handling services"
+  },
+  {
+    "code": "996721",
+    "description": "Refrigerated storage services"
+  },
+  {
+    "code": "996722",
+    "description": "Bulk liquid or gas storage services"
+  },
+  {
+    "code": "996729",
+    "description": "Other storage and warehousing services"
+  },
+  {
+    "code": "996741",
+    "description": "Railway pushing or towing services"
+  },
+  {
+    "code": "996743",
+    "description": "Other supporting services for railway transport not elsewhere classified"
+  },
+  {
+    "code": "996751",
+    "description": "Operation services of national highways, state highways, expressways, roads, streets, bridges and tunnels and the like"
+  },
+  {
+    "code": "996761",
+    "description": "Airport operation services (excluding cargo handling)"
+  },
+  {
+    "code": "996791",
+    "description": "Goods transport agency services for road transport"
+  },
+  {
+    "code": "996793",
+    "description": "Other goods transport services"
+  },
+  {
+    "code": "996799",
+    "description": "Other supporting transport services not elsewhere classified"
+  },
+  {
+    "code": "996811",
+    "description": "Postal services including post office counter services, mail box rental services"
+  },
+  {
+    "code": "996812",
+    "description": "Courier services"
+  },
+  {
+    "code": "996813",
+    "description": "Local delivery services"
+  },
+  {
+    "code": "996819",
+    "description": "Other delivery services not elsewhere classified"
+  },
+  {
+    "code": "996911",
+    "description": "Electricity transmission services"
+  },
+  {
+    "code": "996912",
+    "description": "Electricity distribution services"
+  },
+  {
+    "code": "996913",
+    "description": "Gas distribution services through mains"
+  },
+  {
+    "code": "996921",
+    "description": "Water distribution services through mains"
+  },
+  {
+    "code": "996922",
+    "description": "Services involving distribution of steam, hot water and air conditioning supply etc"
+  },
+  {
+    "code": "997111",
+    "description": "Central banking services"
+  },
+  {
+    "code": "997112",
+    "description": "Deposit services"
+  },
+  {
+    "code": "997113",
+    "description": "Credit-granting services including stand-by commitment, guarantees and securities"
+  },
+  {
+    "code": "997114",
+    "description": "Financial leasing services"
+  },
+  {
+    "code": "997119",
+    "description": "Other financial services (except investment banking, insurance services and pension services)"
+  },
+  {
+    "code": "997120",
+    "description": "Investment banking services"
+  },
+  {
+    "code": "997131",
+    "description": "Pension services"
+  },
+  {
+    "code": "997132",
+    "description": "Life insurance services (excluding reinsurance services)"
+  },
+  {
+    "code": "997133",
+    "description": "Accident and health insurance services"
+  },
+  {
+    "code": "997134",
+    "description": "Motor vehicle insurance services"
+  },
+  {
+    "code": "997135",
+    "description": "Marine, aviation and other transport insurance services"
+  },
+  {
+    "code": "997136",
+    "description": "Freight insurance services and travel insurance services"
+  },
+  {
+    "code": "997137",
+    "description": "Other property insurance services"
+  },
+  {
+    "code": "997139",
+    "description": "Other non-life insurance services (excluding reinsurance services)"
+  },
+  {
+    "code": "997141",
+    "description": "Reinsurance services"
+  },
+  {
+    "code": "997151",
+    "description": "Services related to investment banking such as mergers and acquisition services, corporate finance and venture capital services"
+  },
+  {
+    "code": "997152",
+    "description": "Brokerage and related securities and commodities services including commodity exchange services"
+  },
+  {
+    "code": "997153",
+    "description": "Portfolio management services except pension funds"
+  },
+  {
+    "code": "997154",
+    "description": "Trust and custody services"
+  },
+  {
+    "code": "997155",
+    "description": "Services related to the administration of financial markets"
+  },
+  {
+    "code": "997156",
+    "description": "Financial consultancy services"
+  },
+  {
+    "code": "997157",
+    "description": "Foreign exchange services"
+  },
+  {
+    "code": "997158",
+    "description": "Financial transactions processing and clearing house services"
+  },
+  {
+    "code": "997159",
+    "description": "Other services auxiliary to financial services"
+  },
+  {
+    "code": "997161",
+    "description": "Insurance brokerage and agency services"
+  },
+  {
+    "code": "997162",
+    "description": "Insurance claims adjustment services"
+  },
+  {
+    "code": "997163",
+    "description": "Actuarial services"
+  },
+  {
+    "code": "997169",
+    "description": "Other services auxiliary to insurance and pensions"
+  },
+  {
+    "code": "997211",
+    "description": "Rental or leasing services involving own or leased residential property"
+  },
+  {
+    "code": "997212",
+    "description": "Rental or leasing services involving own or leased non-residential property"
+  },
+  {
+    "code": "997221",
+    "description": "Property management services on a fee or commission basis or on contract basis"
+  },
+  {
+    "code": "997222",
+    "description": "Building sales on a fee or commission basis or on contract basis"
+  },
+  {
+    "code": "997223",
+    "description": "Land sales on a fee or commission basis or on contract basis"
+  },
+  {
+    "code": "997224",
+    "description": "Real estate appraisal services on a fee or commission basis or on contract basis"
+  },
+  {
+    "code": "997311",
+    "description": "Leasing or rental services concerning transport equipment including containers, without operator"
+  },
+  {
+    "code": "997312",
+    "description": "Leasing or rental services concerning agricultural machinery and equipment without operator"
+  },
+  {
+    "code": "997313",
+    "description": "Leasing or rental services concerning construction machinery and equipment without operator"
+  },
+  {
+    "code": "997314",
+    "description": "Leasing or rental services concerning office machinery and equipment (except computers) without operator"
+  },
+  {
+    "code": "997315",
+    "description": "Leasing or rental services concerning computers without operator"
+  },
+  {
+    "code": "997316",
+    "description": "Leasing or rental services concerning telecommunications equipment without operator"
+  },
+  {
+    "code": "997319",
+    "description": "Leasing or rental services concerning other machinery and equipment without operator"
+  },
+  {
+    "code": "997321",
+    "description": "Leasing or rental services concerning televisions, radios, video cassette recorders, projectors, audio systems and related equipment and accessories"
+  },
+  {
+    "code": "997322",
+    "description": "Leasing or rental services concerning video tapes and disks"
+  },
+  {
+    "code": "997323",
+    "description": "Leasing or rental services concerning furniture and other household appliances"
+  },
+  {
+    "code": "997324",
+    "description": "Leasing or rental services concerning pleasure and leisure equipment"
+  },
+  {
+    "code": "997325",
+    "description": "Leasing or rental services concerning household linen"
+  },
+  {
+    "code": "997326",
+    "description": "Leasing or rental services concerning textiles, clothing and footwear"
+  },
+  {
+    "code": "997327",
+    "description": "Leasing or rental services concerning do-it-yourself machinery and equipment"
+  },
+  {
+    "code": "997329",
+    "description": "Leasing or rental services concerning other goods"
+  },
+  {
+    "code": "997331",
+    "description": "Licensing services for the right to use computer software and databases"
+  },
+  {
+    "code": "997332",
+    "description": "Licensing services for the right to broadcast and show original films, sound recordings, radio and television programmes"
+  },
+  {
+    "code": "997333",
+    "description": "Licensing services for the right to reproduce original art works"
+  },
+  {
+    "code": "997334",
+    "description": "Licensing services for the right to reprint and copy manuscripts, books, journals and periodicals"
+  },
+  {
+    "code": "997335",
+    "description": "Licensing services for the right to use research and development products"
+  },
+  {
+    "code": "997336",
+    "description": "Licensing services for the right to use trademarks and franchises"
+  },
+  {
+    "code": "997337",
+    "description": "Licensing services for the right to use minerals including its exploration and evaluation"
+  },
+  {
+    "code": "997338",
+    "description": "Licensing services for right to use other natural resources including telecommunication spectrum"
+  },
+  {
+    "code": "997339",
+    "description": "Licensing services for the right to use other intellectual property products and other resources not elsewhere classified"
+  },
+  {
+    "code": "998311",
+    "description": "Management consulting and management services including financial, strategic, human resources, marketing, operations and supply chain management"
+  },
+  {
+    "code": "998312",
+    "description": "Business consulting services including public relations services"
+  },
+  {
+    "code": "998313",
+    "description": "Information technology (IT) consulting and support services"
+  },
+  {
+    "code": "998314",
+    "description": "Information technology (IT) design and development services"
+  },
+  {
+    "code": "998315",
+    "description": "Hosting and information technology (IT) infrastructure provisioning services"
+  },
+  {
+    "code": "998316",
+    "description": "IT infrastructure and network management services"
+  },
+  {
+    "code": "998319",
+    "description": "Other information technology services not elsewhere classified"
+  },
+  {
+    "code": "998321",
+    "description": "Architectural advisory services"
+  },
+  {
+    "code": "998322",
+    "description": "Architectural services for residential building projects"
+  },
+  {
+    "code": "998323",
+    "description": "Architectural services for non-residential building projects"
+  },
+  {
+    "code": "998324",
+    "description": "Historical restoration architectural services"
+  },
+  {
+    "code": "998325",
+    "description": "Urban planning services"
+  },
+  {
+    "code": "998326",
+    "description": "Rural land planning services"
+  },
+  {
+    "code": "998327",
+    "description": "Project site master planning services"
+  },
+  {
+    "code": "998328",
+    "description": "Landscape architectural services and advisory services"
+  },
+  {
+    "code": "998331",
+    "description": "Engineering advisory services"
+  },
+  {
+    "code": "998332",
+    "description": "Engineering services for building projects"
+  },
+  {
+    "code": "998333",
+    "description": "Engineering services for industrial and manufacturing projects"
+  },
+  {
+    "code": "998334",
+    "description": "Engineering services for transportation projects"
+  },
+  {
+    "code": "998335",
+    "description": "Engineering services for power projects"
+  },
+  {
+    "code": "998336",
+    "description": "Engineering services for telecommunications and broadcasting projects"
+  },
+  {
+    "code": "998337",
+    "description": "Engineering services for waste management projects, water, sewerage and drainage projects"
+  },
+  {
+    "code": "998338",
+    "description": "Engineering services for other projects not elsewhere classified"
+  },
+  {
+    "code": "998339",
+    "description": "Project management services for construction projects"
+  },
+  {
+    "code": "998341",
+    "description": "Geological and geophysical consulting services"
+  },
+  {
+    "code": "998342",
+    "description": "Subsurface surveying services"
+  },
+  {
+    "code": "998343",
+    "description": "Mineral exploration and evaluation services"
+  },
+  {
+    "code": "998344",
+    "description": "Surface surveying and map-making services"
+  },
+  {
+    "code": "998345",
+    "description": "Weather forecasting and meteorological services"
+  },
+  {
+    "code": "998346",
+    "description": "Technical testing and analysis services"
+  },
+  {
+    "code": "998347",
+    "description": "Certification of ships, aircraft, dams, etc"
+  },
+  {
+    "code": "998348",
+    "description": "Certification and authentication of works of art"
+  },
+  {
+    "code": "998349",
+    "description": "Other technical and scientific services not elsewhere classified"
+  },
+  {
+    "code": "998391",
+    "description": "Specialty design services including interior design, fashion design, industrial design and other specialty design services"
+  },
+  {
+    "code": "998392",
+    "description": "Design originals"
+  },
+  {
+    "code": "998393",
+    "description": "Scientific and technical consulting services"
+  },
+  {
+    "code": "998394",
+    "description": "Original compilations of facts or information"
+  },
+  {
+    "code": "998395",
+    "description": "Translation and interpretation services"
+  },
+  {
+    "code": "998396",
+    "description": "Trademarks and franchises"
+  },
+  {
+    "code": "998397",
+    "description": "Sponsorship services and brand promotion services"
+  },
+  {
+    "code": "998399",
+    "description": "Other professional, technical and business services not elsewhere classified"
+  },
+  {
+    "code": "998211",
+    "description": "Legal advisory and representation services concerning criminal law"
+  },
+  {
+    "code": "998212",
+    "description": "Legal advisory and representation services concerning other fields of law"
+  },
+  {
+    "code": "998213",
+    "description": "Legal documentation and certification services concerning patents, copyrights and other intellectual property rights"
+  },
+  {
+    "code": "998214",
+    "description": "Legal documentation and certification services concerning other documents"
+  },
+  {
+    "code": "998215",
+    "description": "Arbitration and conciliation services"
+  },
+  {
+    "code": "998216",
+    "description": "Other legal services not elsewhere classified"
+  },
+  {
+    "code": "998221",
+    "description": "Financial auditing services"
+  },
+  {
+    "code": "998222",
+    "description": "Accounting and bookkeeping services"
+  },
+  {
+    "code": "998223",
+    "description": "Payroll services"
+  },
+  {
+    "code": "998224",
+    "description": "Other accounting services not elsewhere classified"
+  },
+  {
+    "code": "998231",
+    "description": "Corporate tax consulting and preparation services"
+  },
+  {
+    "code": "998232",
+    "description": "Individual tax preparation and planning services"
+  },
+  {
+    "code": "998241",
+    "description": "Insolvency and receivership services"
+  },
+  {
+    "code": "998411",
+    "description": "Carrier services for fixed line telephone and other telecommunications services"
+  },
+  {
+    "code": "998412",
+    "description": "Carrier services for mobile telecommunications services"
+  },
+  {
+    "code": "998413",
+    "description": "Private network services"
+  },
+  {
+    "code": "998414",
+    "description": "Data transmission services"
+  },
+  {
+    "code": "998421",
+    "description": "Internet backbone services"
+  },
+  {
+    "code": "998422",
+    "description": "Internet access services in wired and wireless mode"
+  },
+  {
+    "code": "998431",
+    "description": "Online text based information such as online books, newspapers, periodicals, directories etc"
+  },
+  {
+    "code": "998432",
+    "description": "On-line audio content"
+  },
+  {
+    "code": "998433",
+    "description": "On-line video content"
+  },
+  {
+    "code": "998434",
+    "description": "Software downloads"
+  },
+  {
+    "code": "998439",
+    "description": "Other on-line contents not elsewhere classified"
+  },
+  {
+    "code": "998441",
+    "description": "News agency services to newspapers and periodicals"
+  },
+  {
+    "code": "998442",
+    "description": "Services of independent journalists and press photographers"
+  },
+  {
+    "code": "998451",
+    "description": "Library services"
+  },
+  {
+    "code": "998452",
+    "description": "Operation services of public archives including digital archives"
+  },
+  {
+    "code": "998461",
+    "description": "Radio and television broadcast originals"
+  },
+  {
+    "code": "998462",
+    "description": "Audio originals"
+  },
+  {
+    "code": "998511",
+    "description": "Executive or retained personnel search services"
+  },
+  {
+    "code": "998512",
+    "description": "Permanent placement services other than executive search services"
+  },
+  {
+    "code": "998513",
+    "description": "Contract staffing services"
+  },
+  {
+    "code": "998514",
+    "description": "Temporary staffing services"
+  },
+  {
+    "code": "998515",
+    "description": "Long-term staffing (pay rolling) services"
+  },
+  {
+    "code": "998516",
+    "description": "Temporary staffing-to-permanent placement services"
+  },
+  {
+    "code": "998517",
+    "description": "Co-employment staffing services"
+  },
+  {
+    "code": "998519",
+    "description": "Other employment and labour supply services not elsewhere classified"
+  },
+  {
+    "code": "998521",
+    "description": "Investigation services"
+  },
+  {
+    "code": "998522",
+    "description": "Security consulting services"
+  },
+  {
+    "code": "998523",
+    "description": "Security systems services"
+  },
+  {
+    "code": "998524",
+    "description": "Armoured car services"
+  },
+  {
+    "code": "998525",
+    "description": "Guard services"
+  },
+  {
+    "code": "998526",
+    "description": "Training of guard dogs"
+  },
+  {
+    "code": "998527",
+    "description": "Polygraph services"
+  },
+  {
+    "code": "998528",
+    "description": "Fingerprinting services"
+  },
+  {
+    "code": "998529",
+    "description": "Other security services not elsewhere classified"
+  },
+  {
+    "code": "998531",
+    "description": "Disinfecting and exterminating services"
+  },
+  {
+    "code": "998532",
+    "description": "Window cleaning services"
+  },
+  {
+    "code": "998533",
+    "description": "General cleaning services"
+  },
+  {
+    "code": "998534",
+    "description": "Specialized cleaning services for reservoirs and tanks"
+  },
+  {
+    "code": "998535",
+    "description": "Sterilization of objects or premises (operating rooms)"
+  },
+  {
+    "code": "998536",
+    "description": "Furnace and chimney cleaning services"
+  },
+  {
+    "code": "998537",
+    "description": "Exterior cleaning of buildings of all types"
+  },
+  {
+    "code": "998538",
+    "description": "Cleaning of transportation equipment"
+  },
+  {
+    "code": "998539",
+    "description": "Other cleaning services not elsewhere classified"
+  },
+  {
+    "code": "998540",
+    "description": "Packaging services of goods for others"
+  },
+  {
+    "code": "998551",
+    "description": "Reservation services for transportation"
+  },
+  {
+    "code": "998552",
+    "description": "Reservation services for accommodation, cruises and package tours"
+  },
+  {
+    "code": "998553",
+    "description": "Reservation services for convention centres, congress centres and exhibition halls"
+  },
+  {
+    "code": "998554",
+    "description": "Reservation services for event tickets, cinema halls, entertainment and recreational services"
+  },
+  {
+    "code": "998555",
+    "description": "Tour operator services"
+  },
+  {
+    "code": "998556",
+    "description": "Tourist guide services"
+  },
+  {
+    "code": "998557",
+    "description": "Tourism promotion and visitor information services"
+  },
+  {
+    "code": "998559",
+    "description": "Other travel arrangement and related services not elsewhere classified"
+  },
+  {
+    "code": "998596",
+    "description": "Events, exhibitions, conventions and trade shows organization and assistance services"
+  },
+  {
+    "code": "998597",
+    "description": "Landscape care and maintenance services"
+  },
+  {
+    "code": "998599",
+    "description": "Other support services not elsewhere classified"
+  },
+  {
+    "code": "998611",
+    "description": "Support services to crop production"
+  },
+  {
+    "code": "998612",
+    "description": "Animal husbandry services"
+  },
+  {
+    "code": "998613",
+    "description": "Support services to hunting"
+  },
+  {
+    "code": "998614",
+    "description": "Support services to forestry and logging"
+  },
+  {
+    "code": "998615",
+    "description": "Support services to fishing"
+  },
+  {
+    "code": "998619",
+    "description": "Other support services to agriculture, hunting, forestry and fishing"
+  },
+  {
+    "code": "998621",
+    "description": "Support services to oil and gas extraction"
+  },
+  {
+    "code": "998622",
+    "description": "Support services to other mining not elsewhere classified"
+  },
+  {
+    "code": "998631",
+    "description": "Support services to electricity transmission and distribution"
+  },
+  {
+    "code": "998632",
+    "description": "Support services to gas distribution"
+  },
+  {
+    "code": "998633",
+    "description": "Support services to water distribution and others"
+  },
+  {
+    "code": "998711",
+    "description": "Maintenance and repair services of fabricated metal products, except machinery and equipment"
+  },
+  {
+    "code": "998712",
+    "description": "Maintenance and repair services of office and accounting machinery"
+  },
+  {
+    "code": "998713",
+    "description": "Maintenance and repair services of computers and peripheral equipment"
+  },
+  {
+    "code": "998714",
+    "description": "Maintenance and repair services of transport machinery and equipment"
+  },
+  {
+    "code": "998715",
+    "description": "Maintenance and repair services of electrical household appliances"
+  },
+  {
+    "code": "998716",
+    "description": "Maintenance and repair services of telecommunication equipments and apparatus"
+  },
+  {
+    "code": "998717",
+    "description": "Maintenance and repair services of commercial and industrial machinery"
+  },
+  {
+    "code": "998718",
+    "description": "Maintenance and repair services of elevators and escalators"
+  },
+  {
+    "code": "998719",
+    "description": "Maintenance and repair services of other machinery and equipments not elsewhere classified"
+  },
+  {
+    "code": "998721",
+    "description": "Repair services of footwear and leather goods"
+  },
+  {
+    "code": "998722",
+    "description": "Repair services of watches, clocks and jewellery"
+  },
+  {
+    "code": "998723",
+    "description": "Repair services of garments and household textiles"
+  },
+  {
+    "code": "998724",
+    "description": "Repair services of furniture"
+  },
+  {
+    "code": "998725",
+    "description": "Repair services of bicycles"
+  },
+  {
+    "code": "998726",
+    "description": "Maintenance and repair services of musical instruments"
+  },
+  {
+    "code": "998727",
+    "description": "Repair services for photographic equipment and cameras"
+  },
+  {
+    "code": "998729",
+    "description": "Maintenance and repair services of other goods not elsewhere classified"
+  },
+  {
+    "code": "998811",
+    "description": "Meat processing services"
+  },
+  {
+    "code": "998812",
+    "description": "Fish processing services"
+  },
+  {
+    "code": "998813",
+    "description": "Fruit and vegetables processing services"
+  },
+  {
+    "code": "998814",
+    "description": "Vegetable and animal oil and fat manufacturing services"
+  },
+  {
+    "code": "998815",
+    "description": "Dairy product manufacturing services"
+  },
+  {
+    "code": "998816",
+    "description": "Other food product manufacturing services"
+  },
+  {
+    "code": "998817",
+    "description": "Prepared animal feeds manufacturing services"
+  },
+  {
+    "code": "998818",
+    "description": "Beverage manufacturing services"
+  },
+  {
+    "code": "998819",
+    "description": "Tobacco manufacturing services not elsewhere classified"
+  },
+  {
+    "code": "998821",
+    "description": "Textile manufacturing services"
+  },
+  {
+    "code": "998822",
+    "description": "Wearing apparel manufacturing services"
+  },
+  {
+    "code": "998823",
+    "description": "Leather and leather product manufacturing services"
+  },
+  {
+    "code": "998831",
+    "description": "Wood and wood product manufacturing services"
+  },
+  {
+    "code": "998832",
+    "description": "Paper and paper product manufacturing services"
+  },
+  {
+    "code": "998841",
+    "description": "Coke and refined petroleum product manufacturing services"
+  },
+  {
+    "code": "998842",
+    "description": "Chemical product manufacturing services"
+  },
+  {
+    "code": "998843",
+    "description": "Pharmaceutical product manufacturing services"
+  },
+  {
+    "code": "998851",
+    "description": "Rubber and plastic product manufacturing services"
+  },
+  {
+    "code": "998852",
+    "description": "Other non-metallic mineral product manufacturing services"
+  },
+  {
+    "code": "998853",
+    "description": "Basic metal manufacturing services"
+  },
+  {
+    "code": "998860",
+    "description": "Fabricated metal product, machinery and equipment manufacturing services"
+  },
+  {
+    "code": "998871",
+    "description": "Structural metal product, tank, reservoir and steam generator manufacturing services"
+  },
+  {
+    "code": "998872",
+    "description": "Weapon and ammunition manufacturing services"
+  },
+  {
+    "code": "998873",
+    "description": "Other fabricated metal product manufacturing and metal treatment services"
+  },
+  {
+    "code": "998874",
+    "description": "Computer, electronic and optical product manufacturing services"
+  },
+  {
+    "code": "998875",
+    "description": "Electrical equipment manufacturing services"
+  },
+  {
+    "code": "998876",
+    "description": "General-purpose machinery manufacturing services"
+  },
+  {
+    "code": "998877",
+    "description": "Special-purpose machinery manufacturing services"
+  },
+  {
+    "code": "998881",
+    "description": "Motor vehicle and trailer manufacturing services"
+  },
+  {
+    "code": "998882",
+    "description": "Other transport equipment manufacturing services"
+  },
+  {
+    "code": "998891",
+    "description": "Furniture manufacturing services"
+  },
+  {
+    "code": "998892",
+    "description": "Jewellery manufacturing services"
+  },
+  {
+    "code": "998893",
+    "description": "Imitation jewellery manufacturing services"
+  },
+  {
+    "code": "998894",
+    "description": "Musical instrument manufacturing services"
+  },
+  {
+    "code": "998895",
+    "description": "Sports goods manufacturing services"
+  },
+  {
+    "code": "998896",
+    "description": "Game and toy manufacturing services"
+  },
+  {
+    "code": "998897",
+    "description": "Medical and dental instrument and supply manufacturing services"
+  },
+  {
+    "code": "998898",
+    "description": "Other manufacturing services not elsewhere classified"
+  },
+  {
+    "code": "998911",
+    "description": "Publishing, on a fee or contract basis"
+  },
+  {
+    "code": "998912",
+    "description": "Printing and reproduction services of recorded media, on a fee or contract basis"
+  },
+  {
+    "code": "999111",
+    "description": "Overall Government public services"
+  },
+  {
+    "code": "999112",
+    "description": "Public administrative services related to the provision of educational, health care, cultural and other social services"
+  },
+  {
+    "code": "999113",
+    "description": "Public administrative services related to the more efficient operation of business"
+  },
+  {
+    "code": "999119",
+    "description": "Other administrative services of the government not elsewhere classified"
+  },
+  {
+    "code": "999121",
+    "description": "Public administrative services related to external affairs, diplomatic and consular services abroad"
+  },
+  {
+    "code": "999122",
+    "description": "Services related to foreign economic aid"
+  },
+  {
+    "code": "999123",
+    "description": "Services related to foreign military aid"
+  },
+  {
+    "code": "999124",
+    "description": "Military defence services"
+  },
+  {
+    "code": "999125",
+    "description": "Civil defence services"
+  },
+  {
+    "code": "999126",
+    "description": "Police and fire protection services"
+  },
+  {
+    "code": "999127",
+    "description": "Public administrative services related to law courts"
+  },
+  {
+    "code": "999128",
+    "description": "Administrative services related to the detention or rehabilitation of criminals"
+  },
+  {
+    "code": "999129",
+    "description": "Public administrative services related to other public order and safety affairs not elsewhere classified"
+  },
+  {
+    "code": "999211",
+    "description": "Pre-primary education services"
+  },
+  {
+    "code": "999212",
+    "description": "Primary education services"
+  },
+  {
+    "code": "999221",
+    "description": "Secondary education services, general"
+  },
+  {
+    "code": "999222",
+    "description": "Secondary education services, technical and vocational"
+  },
+  {
+    "code": "999231",
+    "description": "Higher education services, general"
+  },
+  {
+    "code": "999232",
+    "description": "Higher education services, technical"
+  },
+  {
+    "code": "999233",
+    "description": "Higher education services, vocational"
+  },
+  {
+    "code": "999234",
+    "description": "Other higher education services"
+  },
+  {
+    "code": "999241",
+    "description": "Specialized education services"
+  },
+  {
+    "code": "999242",
+    "description": "Cultural education services"
+  },
+  {
+    "code": "999243",
+    "description": "Sports and recreation education services"
+  },
+  {
+    "code": "999249",
+    "description": "Other education and training services and educational support services not elsewhere classified"
+  },
+  {
+    "code": "999259",
+    "description": "Services involving conduct of examination for admission to educational institutions"
+  },
+  {
+    "code": "999293",
+    "description": "Commercial training and coaching services"
+  },
+  {
+    "code": "999311",
+    "description": "Inpatient services"
+  },
+  {
+    "code": "999312",
+    "description": "Medical and dental services"
+  },
+  {
+    "code": "999313",
+    "description": "Childbirth and related services"
+  },
+  {
+    "code": "999314",
+    "description": "Nursing and physiotherapeutic services"
+  },
+  {
+    "code": "999315",
+    "description": "Ambulance services"
+  },
+  {
+    "code": "999316",
+    "description": "Medical laboratory and diagnostic-imaging services"
+  },
+  {
+    "code": "999317",
+    "description": "Blood, sperm and organ bank services"
+  },
+  {
+    "code": "999319",
+    "description": "Other human health services including homeopathy, unani, ayurveda, naturopathy, acupuncture and the like"
+  },
+  {
+    "code": "999321",
+    "description": "Residential health-care services other than by hospitals"
+  },
+  {
+    "code": "999322",
+    "description": "Residential care services for the elderly and persons with disabilities"
+  },
+  {
+    "code": "999331",
+    "description": "Residential care services for children suffering from mental retardation, mental health illnesses or substance abuse"
+  },
+  {
+    "code": "999332",
+    "description": "Other social services with accommodation for adults"
+  },
+  {
+    "code": "999341",
+    "description": "Vocational rehabilitation services"
+  },
+  {
+    "code": "999349",
+    "description": "Other social services without accommodation for the elderly and disabled not elsewhere classified"
+  },
+  {
+    "code": "999351",
+    "description": "Child day-care services"
+  },
+  {
+    "code": "999352",
+    "description": "Guidance and counseling services not elsewhere classified related to children"
+  },
+  {
+    "code": "999353",
+    "description": "Welfare services without accommodation"
+  },
+  {
+    "code": "999359",
+    "description": "Other social services without accommodation not elsewhere classified"
+  },
+  {
+    "code": "999411",
+    "description": "Sewerage and sewage treatment services"
+  },
+  {
+    "code": "999412",
+    "description": "Septic tank emptying and cleaning services"
+  },
+  {
+    "code": "999421",
+    "description": "Collection services of hazardous waste"
+  },
+  {
+    "code": "999422",
+    "description": "Collection services of non-hazardous recyclable materials"
+  },
+  {
+    "code": "999423",
+    "description": "General waste collection services, residential"
+  },
+  {
+    "code": "999424",
+    "description": "General waste collection services, other not elsewhere classified"
+  },
+  {
+    "code": "999431",
+    "description": "Waste preparation, consolidation and storage services"
+  },
+  {
+    "code": "999432",
+    "description": "Hazardous waste treatment and disposal services"
+  },
+  {
+    "code": "999433",
+    "description": "Non-hazardous waste treatment and disposal services"
+  },
+  {
+    "code": "999441",
+    "description": "Site remediation and clean-up services"
+  },
+  {
+    "code": "999442",
+    "description": "Containment, control and monitoring services and other site remediation services"
+  },
+  {
+    "code": "999443",
+    "description": "Building remediation services"
+  },
+  {
+    "code": "999449",
+    "description": "Other remediation services not elsewhere classified"
+  },
+  {
+    "code": "999451",
+    "description": "Sweeping and snow removal services"
+  },
+  {
+    "code": "999459",
+    "description": "Other sanitation services not elsewhere classified"
+  },
+  {
+    "code": "999511",
+    "description": "Services furnished by business and employers organizations"
+  },
+  {
+    "code": "999512",
+    "description": "Services furnished by professional organizations"
+  },
+  {
+    "code": "999521",
+    "description": "Services furnished by trade unions"
+  },
+  {
+    "code": "999591",
+    "description": "Religious services"
+  },
+  {
+    "code": "999592",
+    "description": "Services furnished by political organizations"
+  },
+  {
+    "code": "999593",
+    "description": "Services furnished by human rights organizations"
+  },
+  {
+    "code": "999594",
+    "description": "Cultural and recreational associations"
+  },
+  {
+    "code": "999595",
+    "description": "Services furnished by environmental advocacy groups"
+  },
+  {
+    "code": "999596",
+    "description": "Services provided by other membership organizations not elsewhere classified"
+  },
+  {
+    "code": "999597",
+    "description": "Services furnished by other civic and social organizations"
+  },
+  {
+    "code": "999598",
+    "description": "Home owners associations"
+  },
+  {
+    "code": "999599",
+    "description": "Services provided by other membership organizations not elsewhere classified"
+  },
+  {
+    "code": "999611",
+    "description": "Audiovisual and broadcasting production services"
+  },
+  {
+    "code": "999612",
+    "description": "Audiovisual and broadcasting post-production services"
+  },
+  {
+    "code": "999613",
+    "description": "Audiovisual programme distribution services"
+  },
+  {
+    "code": "999614",
+    "description": "Audiovisual broadcasting (programming and scheduling) services"
+  },
+  {
+    "code": "999615",
+    "description": "Recording services and live broadcast services of sporting and other events"
+  },
+  {
+    "code": "999621",
+    "description": "Sound recording services"
+  },
+  {
+    "code": "999622",
+    "description": "Live recording services"
+  },
+  {
+    "code": "999631",
+    "description": "Services of performing and other artists"
+  },
+  {
+    "code": "999632",
+    "description": "Services of authors, composers, sculptors and other artists, except performing artists"
+  },
+  {
+    "code": "999633",
+    "description": "Original works of authors, composers and other artists except performing artists, painters and sculptors"
+  },
+  {
+    "code": "999641",
+    "description": "Promotion and organization of sports events"
+  },
+  {
+    "code": "999642",
+    "description": "Support services related to sports and recreation"
+  },
+  {
+    "code": "999651",
+    "description": "Performing arts event promotion and organization services"
+  },
+  {
+    "code": "999652",
+    "description": "Performing arts event production and presentation services"
+  },
+  {
+    "code": "999653",
+    "description": "Performing arts facility operation services"
+  },
+  {
+    "code": "999659",
+    "description": "Other performing arts and live entertainment services not elsewhere classified"
+  },
+  {
+    "code": "999661",
+    "description": "Services of athletes"
+  },
+  {
+    "code": "999662",
+    "description": "Support services related to sports and recreation"
+  },
+  {
+    "code": "999691",
+    "description": "Amusement park and similar attraction services"
+  },
+  {
+    "code": "999692",
+    "description": "Gambling and betting services including similar online services"
+  },
+  {
+    "code": "999693",
+    "description": "Coin-operated amusement machine services"
+  },
+  {
+    "code": "999694",
+    "description": "Lottery, betting and gambling services"
+  },
+  {
+    "code": "999699",
+    "description": "Other recreation and amusement services not elsewhere classified"
+  },
+  {
+    "code": "999711",
+    "description": "Coin-operated laundry services"
+  },
+  {
+    "code": "999712",
+    "description": "Dry-cleaning services (including fur product cleaning services)"
+  },
+  {
+    "code": "999713",
+    "description": "Other textile cleaning services"
+  },
+  {
+    "code": "999714",
+    "description": "Pressing services"
+  },
+  {
+    "code": "999715",
+    "description": "Dyeing and colouring services"
+  },
+  {
+    "code": "999719",
+    "description": "Other washing, cleaning and dyeing services not elsewhere classified"
+  },
+  {
+    "code": "999721",
+    "description": "Hairdressing and barbers services"
+  },
+  {
+    "code": "999722",
+    "description": "Cosmetic treatment (including cosmetic/plastic surgery), manicuring and pedicuring services"
+  },
+  {
+    "code": "999723",
+    "description": "Physical well-being services including health club and fitness centre services"
+  },
+  {
+    "code": "999729",
+    "description": "Other beauty treatment services not elsewhere classified"
+  },
+  {
+    "code": "999731",
+    "description": "Cemeteries and cremation services"
+  },
+  {
+    "code": "999732",
+    "description": "Undertaking services"
+  },
+  {
+    "code": "999791",
+    "description": "Services involving commercial use or exploitation of any event"
+  },
+  {
+    "code": "999792",
+    "description": "Agreeing to do an act"
+  },
+  {
+    "code": "999793",
+    "description": "Agreeing to refrain from doing an act"
+  },
+  {
+    "code": "999794",
+    "description": "Agreeing to tolerate an act"
+  },
+  {
+    "code": "999795",
+    "description": "Conduct of religious ceremonies/rituals by persons"
+  },
+  {
+    "code": "999799",
+    "description": "Other miscellaneous services not elsewhere classified"
+  },
+  {
+    "code": "999800",
+    "description": "Domestic services both part time and full time"
+  },
+  {
+    "code": "999900",
+    "description": "Services provided by extraterritorial organizations and bodies"
+  }
+]
