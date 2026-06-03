@@ -1,3 +1,13 @@
+/**
+ * Type definitions for hsn-code-package.
+ *
+ * A zero-runtime-dependency toolkit for Indian GST/customs work: HSN & SAC code
+ * lookup, GST rate data, CGST/SGST/IGST calculation, GSTIN/PAN validation, and
+ * export helpers. All types are bundled — no `@types` package is required.
+ *
+ * @packageDocumentation
+ */
+
 export interface HsnCode {
     code: string;
     description: string;
@@ -181,7 +191,10 @@ export function searchSac(query: string, options?: SearchOptions): SacCode[];
 export function getCodeDetails(code: string | number): CodeDetails | undefined;
 
 // Export types
-export function exportToCSV(data: object[], options?: { delimiter?: string; headers?: string[] }): string;
+export function exportToCSV(
+    data: ReadonlyArray<Record<string, unknown>>,
+    options?: { delimiter?: string; headers?: readonly string[] }
+): string;
 export function exportToJSON(data: unknown, options?: { pretty?: boolean }): string;
 export function generateGSTR1Summary(
     items: Array<{ taxableValue: number; gstRate: number; isInterState?: boolean; cessRate?: number }>

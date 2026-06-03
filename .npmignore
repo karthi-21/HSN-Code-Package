@@ -1,0 +1,14 @@
+# Development files
+scripts/
+tests/
+.github/
+*.test.js
+*.test.ts
+coverage/
+.jest*
+code_list.xlsx
+real-world-example.js
+
+# Config
+.eslintrc*
+.prettierrc*
