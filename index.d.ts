@@ -27,6 +27,8 @@ export interface SearchOptions {
 export interface HsnStats {
     version: string;
     lastUpdated: string;
+    gstRatesLastUpdated: string;
+    gstNotificationRef: string;
     totalCodes: number;
     chapterCount: number;
     source: string;
@@ -150,6 +152,7 @@ export interface HsnCodeWithRate extends HsnCode {
     cessRate?: number;
     rateSource?: string;
     effectiveFrom?: string;
+    notificationRef?: string;
 }
 
 /** Returns GST rate details for an exact HSN code, or null if not found. */

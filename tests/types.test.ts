@@ -24,6 +24,8 @@ const valid: boolean = isValidHsnCode('52010011');
 const chapter: HsnCode[] = getHsnChapter('52');
 const searched: HsnCode[] = searchHsn('silk', { matchType: 'contains', limit: 10 });
 const stats: HsnStats = getStats();
+const gstRatesLastUpdated: string = stats.gstRatesLastUpdated;
+const gstNotificationRef: string = stats.gstNotificationRef;
 const summary: ChapterSummary | null = getChapterSummary('52');
 const byKeywords: HsnCode[] = findCodesByDescription(['cotton', 'carded']);
 const bulk: BulkValidationResult = bulkValidateHsnCodes(['52010011', '00000000']);
@@ -31,6 +33,7 @@ const bulk: BulkValidationResult = bulkValidateHsnCodes(['52010011', '00000000']
 // GST rates
 const rate: GstRate | null = getGstRateByCode('52010011');
 const withRate: HsnCodeWithRate | undefined = getHsnByExactCodeWithRate('52010011');
+const notificationRef: string | undefined = withRate?.notificationRef;
 const slab: HsnCode[] = getHsnByRateSlabs(5);
 
 // GST calculation
@@ -62,8 +65,9 @@ const gstr1: object[] = generateGSTR1Summary([{ taxableValue: 10000, gstRate: 18
 
 // Reference all bindings so noUnusedLocals (if enabled) stays quiet.
 void [
-  all, byText, byCode, exact, valid, chapter, searched, stats, summary,
-  byKeywords, bulk, rate, withRate, slab, tax, breakdown, reverse, taxType,
+  all, byText, byCode, exact, valid, chapter, searched, stats,
+  gstRatesLastUpdated, gstNotificationRef, summary, byKeywords, bulk, rate,
+  withRate, notificationRef, slab, tax, breakdown, reverse, taxType,
   invoice, grouped, rounded, gstinResult, formatted, stateName, panValid,
   components, allSac, sacEntry, sacSearch, details, csv, json, gstr1
 ];
