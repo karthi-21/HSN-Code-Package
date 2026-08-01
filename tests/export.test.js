@@ -11,6 +11,36 @@ describe('exportToCSV', () => {
     const csv = exportToCSV([{ a: 'hello, world', b: 1 }]);
     expect(csv).toContain('"hello, world"');
   });
+  test.each([
+    ['equals', '=1+1', "'=1+1"],
+    ['plus', '+cmd', "'+cmd"],
+    ['minus', '-2+3', "'-2+3"],
+    ['at sign', '@SUM(A1)', "'@SUM(A1)"],
+    ['leading whitespace', '   =1+1', "'   =1+1"],
+    ['leading tab', '\tformula', "'\tformula"],
+    ['leading carriage return', '\rformula', "\"'\rformula\""]
+  ])('neutralizes dangerous %s string cells', (_label, value, expected) => {
+    expect(exportToCSV([{ value }])).toBe(`value\n${expected}`);
+  });
+  test('neutralizes dangerous headers', () => {
+    expect(exportToCSV([{ '=formula': 'safe' }])).toBe("'=formula\nsafe");
+  });
+  test.each(['safe=still-text', 'safe+still-text', 'safe-still-text', 'safe@still-text'])(
+    'does not alter punctuation later in text: %s',
+    (value) => {
+      expect(exportToCSV([{ value }])).toBe(`value\n${value}`);
+    }
+  );
+  test('does not alter numbers or booleans', () => {
+    expect(exportToCSV([{ amount: -10, enabled: true }])).toBe('amount,enabled\n-10,true');
+  });
+  test('allows formula protection to be disabled while still quoting carriage returns', () => {
+    expect(exportToCSV([{ value: '=1+1' }], { preventFormulaInjection: false })).toBe('value\n=1+1');
+    expect(exportToCSV([{ value: '\rformula' }], { preventFormulaInjection: false })).toBe('value\n"\rformula"');
+  });
+  test.each(['true', 1, null])('rejects non-boolean formula protection option %p', (value) => {
+    expect(() => exportToCSV([{ value: 'safe' }], { preventFormulaInjection: value })).toThrow(TypeError);
+  });
   test('empty array returns empty string', () => {
     expect(exportToCSV([])).toBe('');
   });

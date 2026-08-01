@@ -199,7 +199,7 @@ export function getCodeDetails(code: string | number): CodeDetails | undefined;
 // Export types
 export function exportToCSV(
     data: ReadonlyArray<Record<string, unknown>>,
-    options?: { delimiter?: string; headers?: readonly string[] }
+    options?: { delimiter?: string; headers?: readonly string[]; preventFormulaInjection?: boolean }
 ): string;
 export function exportToJSON(data: unknown, options?: { pretty?: boolean }): string;
 

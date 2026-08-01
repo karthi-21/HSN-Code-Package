@@ -2,12 +2,23 @@
 
 function exportToCSV(data, options) {
   if (!Array.isArray(data)) throw new TypeError('data must be an array');
-  const { delimiter = ',', headers } = options || {};
+  const { delimiter = ',', headers, preventFormulaInjection = true } = options || {};
+  if (typeof preventFormulaInjection !== 'boolean') {
+    throw new TypeError('preventFormulaInjection must be a boolean');
+  }
   if (data.length === 0) return '';
   const keys = headers || Object.keys(data[0]);
   function escape(val) {
-    const s = String(val == null ? '' : val);
-    if (s.includes(delimiter) || s.includes('"') || s.includes('\n')) {
+    let safeVal = val;
+    if (preventFormulaInjection && typeof safeVal === 'string') {
+      const firstNonWhitespace = safeVal.match(/\S/);
+      const startsWithFormula = firstNonWhitespace && '=+-@'.includes(firstNonWhitespace[0]);
+      if (startsWithFormula || safeVal.startsWith('\t') || safeVal.startsWith('\r')) {
+        safeVal = `'${safeVal}`;
+      }
+    }
+    const s = String(safeVal == null ? '' : safeVal);
+    if (s.includes(delimiter) || s.includes('"') || s.includes('\n') || s.includes('\r')) {
       return '"' + s.replace(/"/g, '""') + '"';
     }
     return s;

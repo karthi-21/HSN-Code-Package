@@ -62,6 +62,8 @@ const details: CodeDetails | undefined = getCodeDetails('9954');
 
 // Export
 const csv: string = exportToCSV([{ code: '1', description: 'test' }]);
+const protectedCsv: string = exportToCSV([{ value: '=1+1' }], { preventFormulaInjection: true });
+const unprotectedCsv: string = exportToCSV([{ value: '=1+1' }], { preventFormulaInjection: false });
 const json: string = exportToJSON([{ code: '1' }]);
 const gstr1Item: GSTR1LineItem = { taxableValue: 10000, gstRate: 18 };
 const gstr1: GSTR1SummaryRow[] = generateGSTR1Summary([gstr1Item]);
@@ -76,8 +78,8 @@ void [
   gstRatesLastUpdated, gstRateSource, gstNotificationRef, summary, byKeywords, bulk, rate,
   withRate, notificationRef, slab, tax, breakdown, reverse, taxType,
   invoice, grouped, rounded, gstinResult, formatted, stateName, panValid,
-  components, allSac, sacEntry, sacSearch, details, csv, json, gstr1Item,
-  gstr1, gstr1ByIgstRate, gstr1TaxRate
+  components, allSac, sacEntry, sacSearch, details, csv, protectedCsv,
+  unprotectedCsv, json, gstr1Item, gstr1, gstr1ByIgstRate, gstr1TaxRate
 ];
 const _opts: SearchOptions = { matchType: 'exact', limit: 5, offset: 0 };
 const _bdOpts: GSTBreakdownOptions = { isInterState: true, cessRate: 12 };

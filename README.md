@@ -395,10 +395,16 @@ hsn.exportToCSV(hsn.getCodeByTxt('cotton'));
 // → "code,description\n12072010,..."
 ```
 
-| Option      | Type       | Default                 | Description                       |
-| ----------- | ---------- | ----------------------- | --------------------------------- |
-| `delimiter` | `string`   | `','`                   | Field delimiter.                  |
-| `headers`   | `string[]` | keys of the first row   | Explicit column order/selection.  |
+| Option                    | Type       | Default               | Description                                      |
+| ------------------------- | ---------- | --------------------- | ------------------------------------------------ |
+| `delimiter`               | `string`   | `','`                 | Field delimiter.                                 |
+| `headers`                 | `string[]` | keys of the first row | Explicit column order/selection.                 |
+| `preventFormulaInjection` | `boolean`  | `true`                | Prefix spreadsheet-like string cells with `'`.  |
+
+Formula protection applies to string values and headers beginning with `=`,
+`+`, `-`, or `@` after optional whitespace, and to strings beginning with a tab
+or carriage return. Disable it only when legacy formula handling is required
+and the output will not be opened by spreadsheet software.
 
 ### `exportToJSON(data, options)`
 
