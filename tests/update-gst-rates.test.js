@@ -308,6 +308,7 @@ describe('command and workflow safety', () => {
 
     test('scheduled workflow has no repository write path', () => {
         const workflow = fs.readFileSync(path.join(__dirname, '..', '.github', 'workflows', 'update-gst-rates.yml'), 'utf8');
+        expect(workflow).toContain("if: ${{ vars.GST_RATE_SOURCE_URL != '' }}");
         expect(workflow).toContain('contents: read');
         expect(workflow).toContain('node scripts/update-gst-rates.js --check');
         expect(workflow).not.toMatch(/contents: write|git add|git commit|git push|--write|force_update|continue-on-error/);

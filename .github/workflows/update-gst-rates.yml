@@ -7,6 +7,7 @@ on:
 
 jobs:
   update-rates:
+    if: ${{ vars.GST_RATE_SOURCE_URL != '' }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
