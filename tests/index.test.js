@@ -31,6 +31,18 @@ describe('getAllHsn', () => {
     test('returns the same array reference on repeated calls (cached)', () => {
         expect(getAllHsn()).toBe(getAllHsn());
     });
+
+    test('freezes the canonical array and its records without changing state', () => {
+        const all = getAllHsn();
+        const first = all[0];
+        const original = { ...first };
+        expect(Object.isFrozen(all)).toBe(true);
+        expect(Object.isFrozen(first)).toBe(true);
+        expect(() => all.push({ code: 'x', description: 'x' })).toThrow(TypeError);
+        expect(() => { all[0] = { code: 'x', description: 'x' }; }).toThrow(TypeError);
+        expect(() => { first.description = 'changed'; }).toThrow(TypeError);
+        expect(getAllHsn()[0]).toEqual(original);
+    });
 });
 
 // ── getCodeByTxt ───────────────────────────────────────────────────────────
@@ -193,6 +205,15 @@ describe('searchHsn', () => {
     test('throws TypeError for null', () => {
         expect(() => searchHsn(null)).toThrow(TypeError);
     });
+
+    test('returns a reorderable array containing frozen records', () => {
+        const canonicalFirst = getAllHsn()[0];
+        const results = searchHsn('live', { limit: 5 });
+        expect(Object.isFrozen(results)).toBe(false);
+        expect(Object.isFrozen(results[0])).toBe(true);
+        expect(() => results.reverse()).not.toThrow();
+        expect(getAllHsn()[0]).toBe(canonicalFirst);
+    });
 });
 
 // ── getStats ───────────────────────────────────────────────────────────────
@@ -209,5 +230,14 @@ describe('getStats', () => {
 
     test('totalCodes matches getAllHsn length', () => {
         expect(getStats().totalCodes).toBe(getAllHsn().length);
+    });
+
+    test('returns the same frozen metadata without allowing mutation', () => {
+        const stats = getStats();
+        const originalVersion = stats.version;
+        expect(stats).toBe(getStats());
+        expect(Object.isFrozen(stats)).toBe(true);
+        expect(() => { stats.version = 'changed'; }).toThrow(TypeError);
+        expect(getStats().version).toBe(originalVersion);
     });
 });

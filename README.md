@@ -82,6 +82,11 @@ hsn.getAllHsn();
 // → [ { code: '1011010', description: '...' }, ... ]  (12,604 entries)
 ```
 
+Bundled HSN, SAC, GST-rate, and metadata records are immutable. The canonical
+arrays returned by `getAllHsn()` and `getAllSac()` are also immutable and keep
+the same reference; clone an array or record before modifying it. Search result
+arrays may be reordered, but their records remain immutable.
+
 ### `getCodeByTxt(txt)`
 
 Case-insensitive partial search on the description.

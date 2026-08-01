@@ -17,7 +17,7 @@ import {
 } from '../index';
 
 // HSN lookup
-const all: HsnCode[] = getAllHsn();
+const all: ReadonlyArray<HsnCode> = getAllHsn();
 const byText: HsnCode[] = getCodeByTxt('cotton');
 const byCode: HsnCode[] = getDesByCode('5201');
 const exact: HsnCode | undefined = getHsnByExactCode('52010011');
@@ -55,7 +55,7 @@ const panValid: boolean = isValidPAN('AAPFU0939F');
 const components: GSTINComponents = getGSTINComponents('27AAPFU0939F1ZV');
 
 // SAC
-const allSac: SacCode[] = getAllSac();
+const allSac: ReadonlyArray<SacCode> = getAllSac();
 const sacEntry: SacCode | undefined = getSacByCode('9954');
 const sacSearch: SacCode[] = searchSac('construction');
 const details: CodeDetails | undefined = getCodeDetails('9954');

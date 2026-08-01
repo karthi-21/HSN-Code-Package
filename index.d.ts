@@ -11,8 +11,8 @@
  */
 
 export interface HsnCode {
-    code: string;
-    description: string;
+    readonly code: string;
+    readonly description: string;
 }
 
 export interface SearchOptions {
@@ -25,18 +25,18 @@ export interface SearchOptions {
 }
 
 export interface HsnStats {
-    version: string;
-    lastUpdated: string;
-    gstRatesLastUpdated: string;
-    gstRateSource: string;
-    gstNotificationRef: string;
-    totalCodes: number;
-    chapterCount: number;
-    source: string;
+    readonly version: string;
+    readonly lastUpdated: string;
+    readonly gstRatesLastUpdated: string;
+    readonly gstRateSource: string;
+    readonly gstNotificationRef: string;
+    readonly totalCodes: number;
+    readonly chapterCount: number;
+    readonly source: string;
 }
 
 /** Returns all 12,000+ HSN codes. */
-export function getAllHsn(): HsnCode[];
+export function getAllHsn(): ReadonlyArray<HsnCode>;
 
 /** Case-insensitive partial search on description. */
 export function getCodeByTxt(txt: string): HsnCode[];
@@ -136,14 +136,14 @@ export function bulkValidateHsnCodes(codes: Array<string | number>): BulkValidat
 
 // GST rate types
 export interface GstRate {
-    code: string;
-    igstRate: number;
-    cgstRate: number;
-    sgstRate: number;
-    cessRate: number;
-    rateSource: string;
-    effectiveFrom: string;
-    notificationRef: string;
+    readonly code: string;
+    readonly igstRate: number;
+    readonly cgstRate: number;
+    readonly sgstRate: number;
+    readonly cessRate: number;
+    readonly rateSource: string;
+    readonly effectiveFrom: string;
+    readonly notificationRef: string;
 }
 
 export interface HsnCodeWithRate extends HsnCode {
@@ -189,9 +189,9 @@ export function isValidPAN(pan: string): boolean;
 export function getGSTINComponents(gstin: string): GSTINComponents;
 
 // SAC types
-export interface SacCode { code: string; description: string; }
+export interface SacCode { readonly code: string; readonly description: string; }
 export interface CodeDetails { code: string; description: string; type: 'HSN' | 'SAC'; }
-export function getAllSac(): SacCode[];
+export function getAllSac(): ReadonlyArray<SacCode>;
 export function getSacByCode(code: string | number): SacCode | undefined;
 export function searchSac(query: string, options?: SearchOptions): SacCode[];
 export function getCodeDetails(code: string | number): CodeDetails | undefined;

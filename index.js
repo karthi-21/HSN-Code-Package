@@ -4,9 +4,14 @@ const path = require('path');
 
 let _cache = null;
 
+function _freezeFlatDataset(records) {
+    records.forEach(record => Object.freeze(record));
+    return Object.freeze(records);
+}
+
 function _load() {
     if (!_cache) {
-        _cache = require(path.join(__dirname, 'data', 'hsn_codes.json'));
+        _cache = _freezeFlatDataset(require(path.join(__dirname, 'data', 'hsn_codes.json')));
     }
     return _cache;
 }
@@ -14,7 +19,7 @@ function _load() {
 let _ratesCache = null;
 function _loadRates() {
     if (!_ratesCache) {
-        _ratesCache = require(path.join(__dirname, 'data', 'gst_rates.json'));
+        _ratesCache = _freezeFlatDataset(require(path.join(__dirname, 'data', 'gst_rates.json')));
     }
     return _ratesCache;
 }
@@ -124,8 +129,12 @@ function searchHsn(query, options) {
  * Returns metadata about the bundled HSN dataset.
  * @returns {{ version: string, lastUpdated: string, totalCodes: number, chapterCount: number, source: string }}
  */
+let _metadataCache = null;
 function getStats() {
-    return require(path.join(__dirname, 'data', 'metadata.json'));
+    if (!_metadataCache) {
+        _metadataCache = Object.freeze(require(path.join(__dirname, 'data', 'metadata.json')));
+    }
+    return _metadataCache;
 }
 
 const gst = require('./gst');

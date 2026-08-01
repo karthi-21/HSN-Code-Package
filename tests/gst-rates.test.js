@@ -20,6 +20,15 @@ describe('getGstRateByCode', () => {
   test('throws on invalid input', () => {
     expect(() => getGstRateByCode(null)).toThrow(TypeError);
   });
+  test('returns the same frozen rate without allowing mutation', () => {
+    const rates = require('../data/gst_rates.json');
+    const rate = getGstRateByCode(rates[0].code);
+    const originalRate = rate.igstRate;
+    expect(rate).toBe(getGstRateByCode(rates[0].code));
+    expect(Object.isFrozen(rate)).toBe(true);
+    expect(() => { rate.igstRate = 99; }).toThrow(TypeError);
+    expect(getGstRateByCode(rates[0].code).igstRate).toBe(originalRate);
+  });
 });
 
 describe('getHsnByExactCodeWithRate', () => {
@@ -47,5 +56,11 @@ describe('getHsnByRateSlabs', () => {
   });
   test('throws on non-number', () => {
     expect(() => getHsnByRateSlabs('5')).toThrow(TypeError);
+  });
+  test('returns a reorderable array containing frozen HSN records', () => {
+    const results = getHsnByRateSlabs(5);
+    expect(Object.isFrozen(results)).toBe(false);
+    expect(Object.isFrozen(results[0])).toBe(true);
+    expect(() => results.reverse()).not.toThrow();
   });
 });
