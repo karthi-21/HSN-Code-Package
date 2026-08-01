@@ -414,6 +414,13 @@ hsn.generateGSTR1Summary([{ taxableValue: 10000, gstRate: 18, isInterState: fals
 //       cess: 0, totalTax: 1800, count: 1 } ]
 ```
 
+Each item requires a non-negative finite `taxableValue` and either `gstRate` or
+the compatible `igstRate` field. `cessRate` defaults to `0`, and `isInterState`
+defaults to `false`. When both rate fields are supplied, `gstRate` takes
+precedence. Malformed items, non-finite numbers, negative values, and a
+non-boolean `isInterState` throw an indexed field error instead of being
+included in the summary.
+
 ---
 
 ## CLI

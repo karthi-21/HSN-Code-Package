@@ -24,26 +24,55 @@ function exportToJSON(data, options) {
   return pretty ? JSON.stringify(data, null, 2) : JSON.stringify(data);
 }
 
+function validateGSTR1Number(value, index, field) {
+  const label = `items[${index}].${field}`;
+  if (value == null) throw new TypeError(`${label} is required`);
+  if (typeof value !== 'number' || !Number.isFinite(value)) {
+    throw new TypeError(`${label} must be a finite number`);
+  }
+  if (value < 0) throw new RangeError(`${label} must not be negative`);
+  return value;
+}
+
 function generateGSTR1Summary(items) {
   if (!Array.isArray(items)) throw new TypeError('items must be an array');
   const groups = {};
-  for (const item of items) {
-    const rate = item.gstRate != null ? item.gstRate : item.igstRate || 0;
+  for (const [index, item] of items.entries()) {
+    if (item === null || typeof item !== 'object' || Array.isArray(item)) {
+      throw new TypeError(`items[${index}].item must be a non-null object`);
+    }
+
+    const tv = validateGSTR1Number(item.taxableValue, index, 'taxableValue');
+    let rate;
+    if (item.gstRate != null) {
+      rate = validateGSTR1Number(item.gstRate, index, 'gstRate');
+    } else if (item.igstRate != null) {
+      rate = validateGSTR1Number(item.igstRate, index, 'igstRate');
+    } else {
+      throw new TypeError(`items[${index}].gstRate or items[${index}].igstRate is required`);
+    }
+    const cessRate = item.cessRate == null
+      ? 0
+      : validateGSTR1Number(item.cessRate, index, 'cessRate');
+    const isInterState = item.isInterState == null ? false : item.isInterState;
+    if (typeof isInterState !== 'boolean') {
+      throw new TypeError(`items[${index}].isInterState must be a boolean`);
+    }
+
     const key = String(rate);
     if (!groups[key]) {
       groups[key] = { taxRate: rate, taxableValue: 0, igst: 0, cgst: 0, sgst: 0, cess: 0, totalTax: 0, count: 0 };
     }
     const g = groups[key];
-    const tv = item.taxableValue || 0;
     g.taxableValue += tv;
     const taxAmount = tv * rate / 100;
-    if (item.isInterState) {
+    if (isInterState) {
       g.igst += taxAmount;
     } else {
       g.cgst += taxAmount / 2;
       g.sgst += taxAmount / 2;
     }
-    const cessAmount = item.cessRate ? tv * item.cessRate / 100 : 0;
+    const cessAmount = tv * cessRate / 100;
     g.cess += cessAmount;
     g.totalTax += taxAmount + cessAmount;
     g.count++;

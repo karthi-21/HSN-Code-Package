@@ -201,6 +201,27 @@ export function exportToCSV(
     options?: { delimiter?: string; headers?: readonly string[] }
 ): string;
 export function exportToJSON(data: unknown, options?: { pretty?: boolean }): string;
+
+export type GSTR1LineItem = {
+    taxableValue: number;
+    cessRate?: number;
+    isInterState?: boolean;
+} & (
+    { gstRate: number; igstRate?: number }
+    | { gstRate?: undefined; igstRate: number }
+);
+
+export interface GSTR1SummaryRow {
+    taxRate: number;
+    taxableValue: number;
+    igst: number;
+    cgst: number;
+    sgst: number;
+    cess: number;
+    totalTax: number;
+    count: number;
+}
+
 export function generateGSTR1Summary(
-    items: Array<{ taxableValue: number; gstRate: number; isInterState?: boolean; cessRate?: number }>
-): object[];
+    items: ReadonlyArray<GSTR1LineItem>
+): GSTR1SummaryRow[];
