@@ -3,14 +3,9 @@
 /**
  * GST rate data pipeline.
  *
- * 1. Attempts to download the CBIC GST rate Excel from the GST portal.
- * 2. Parses it with the `xlsx` library.
- * 3. Transforms the data into data/gst_rates.json.
- * 4. Updates data/metadata.json with a gstRatesLastUpdated field.
- *
- * If the download fails (the CBIC portal usually requires browser interaction),
- * the script falls back to chapter-level rate mappings hardcoded from CBIC
- * Notification No. 09/2025-CT(Rate) (effective 22 Sep 2025).
+ * Downloads and validates an explicitly configured authoritative workbook,
+ * then atomically updates the committed rate data only when content changes.
+ * Scheduled failures never regenerate data from the static chapter map.
  */
 
 const fs = require('fs');
@@ -22,9 +17,18 @@ const HSN_FILE = path.join(DATA_DIR, 'hsn_codes.json');
 const RATES_FILE = path.join(DATA_DIR, 'gst_rates.json');
 const METADATA_FILE = path.join(DATA_DIR, 'metadata.json');
 
-const CBIC_URL = 'https://services.gst.gov.in/services/searchhsnsac';
 const EFFECTIVE_FROM = '2025-09-22';
 const NOTIFICATION_REF = 'Notification No. 09/2025-CT(Rate)';
+const MAX_REDIRECTS = 3;
+const MAX_RESPONSE_BYTES = 10 * 1024 * 1024;
+const MIN_RATE_ROWS = 100;
+const DOWNLOAD_TIMEOUT_MS = 15000;
+const ALLOWED_CONTENT_TYPES = new Set([
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    'application/vnd.ms-excel',
+    'application/octet-stream',
+    'application/zip'
+]);
 
 /**
  * Chapter-level IGST rate map from CBIC Notification 09/2025-CT(Rate).
@@ -70,24 +74,68 @@ function resolveRate(paddedCode) {
 }
 
 /**
- * Attempts to download the CBIC Excel. Rejects on any failure.
- * @returns {Promise<Buffer>}
+ * Downloads an Excel workbook, following at most three same-host redirects.
+ * @returns {Promise<{buffer: Buffer, contentType: string}>}
  */
-function downloadExcel(url) {
-    return new Promise((resolve, reject) => {
-        const req = https.get(url, { timeout: 15000 }, (res) => {
-            if (res.statusCode !== 200) {
-                res.resume();
-                reject(new Error(`Unexpected status code ${res.statusCode}`));
-                return;
-            }
-            const chunks = [];
-            res.on('data', (c) => chunks.push(c));
-            res.on('end', () => resolve(Buffer.concat(chunks)));
+function downloadExcel(url, options) {
+    const { get = https.get, timeoutMs = DOWNLOAD_TIMEOUT_MS, maxBytes = MAX_RESPONSE_BYTES } = options || {};
+    const originalUrl = new URL(url);
+    if (originalUrl.protocol !== 'https:') {
+        return Promise.reject(new Error('GST_RATE_SOURCE_URL must use HTTPS'));
+    }
+
+    function request(currentUrl, redirectCount) {
+        return new Promise((resolve, reject) => {
+            const req = get(currentUrl, { timeout: timeoutMs }, (res) => {
+                const statusCode = res.statusCode || 0;
+                if (statusCode >= 300 && statusCode < 400 && res.headers.location) {
+                    res.resume();
+                    if (redirectCount >= MAX_REDIRECTS) {
+                        reject(new Error(`Too many redirects (maximum ${MAX_REDIRECTS})`));
+                        return;
+                    }
+                    const nextUrl = new URL(res.headers.location, currentUrl);
+                    if (nextUrl.host !== originalUrl.host) {
+                        reject(new Error(`Cross-host redirect rejected: ${nextUrl.host}`));
+                        return;
+                    }
+                    request(nextUrl, redirectCount + 1).then(resolve, reject);
+                    return;
+                }
+                if (statusCode !== 200) {
+                    res.resume();
+                    reject(new Error(`Unexpected status code ${statusCode}`));
+                    return;
+                }
+
+                const contentLength = Number(res.headers['content-length']);
+                if (Number.isFinite(contentLength) && contentLength > maxBytes) {
+                    res.resume();
+                    reject(new Error(`Workbook exceeds ${maxBytes} byte limit`));
+                    return;
+                }
+
+                const chunks = [];
+                let size = 0;
+                res.on('data', (chunk) => {
+                    size += chunk.length;
+                    if (size > maxBytes) {
+                        req.destroy(new Error(`Workbook exceeds ${maxBytes} byte limit`));
+                        return;
+                    }
+                    chunks.push(chunk);
+                });
+                res.on('end', () => resolve({
+                    buffer: Buffer.concat(chunks),
+                    contentType: String(res.headers['content-type'] || '')
+                }));
+            });
+            req.on('timeout', () => req.destroy(new Error('Request timed out')));
+            req.on('error', reject);
         });
-        req.on('timeout', () => req.destroy(new Error('Request timed out')));
-        req.on('error', reject);
-    });
+    }
+
+    return request(originalUrl, 0);
 }
 
 /**
@@ -100,16 +148,27 @@ function parseExcel(buffer) {
     const xlsx = require('xlsx');
     const wb = xlsx.read(buffer, { type: 'buffer' });
     const sheet = wb.Sheets[wb.SheetNames[0]];
+    if (!sheet) throw new Error('Workbook does not contain a worksheet');
     const rows = xlsx.utils.sheet_to_json(sheet, { defval: '' });
     const map = new Map();
-    for (const row of rows) {
-        const codeRaw = row.HSN || row.hsn || row.Code || row.code || row['HSN Code'];
-        const rateRaw = row.Rate || row.rate || row.IGST || row.igst || row['GST Rate'];
-        if (codeRaw === undefined || codeRaw === '') continue;
+    const codeHeaders = ['HSN', 'hsn', 'Code', 'code', 'HSN Code'];
+    const rateHeaders = ['Rate', 'rate', 'IGST', 'igst', 'GST Rate'];
+    for (const [index, row] of rows.entries()) {
+        const codeRaw = codeHeaders.map(key => row[key]).find(value => value !== undefined && value !== null && value !== '');
+        const rateRaw = rateHeaders.map(key => row[key]).find(value => value !== undefined && value !== null && value !== '');
+        if (codeRaw === undefined) throw new Error(`Row ${index + 2} is missing an HSN code`);
+        if (rateRaw === undefined) throw new Error(`Row ${index + 2} is missing a GST rate`);
         const code = String(codeRaw).replace(/\D/g, '');
-        const rate = parseFloat(String(rateRaw).replace('%', ''));
-        if (!code || Number.isNaN(rate)) continue;
-        map.set(code.padStart(8, '0'), rate);
+        const rate = Number(String(rateRaw).replace('%', '').trim());
+        if (!code) throw new Error(`Row ${index + 2} has an invalid HSN code`);
+        if (!Number.isFinite(rate) || rate < 0) {
+            throw new Error(`Row ${index + 2} has an invalid GST rate`);
+        }
+        const normalizedCode = code.padStart(8, '0');
+        if (map.has(normalizedCode)) {
+            throw new Error(`Duplicate normalized HSN code ${normalizedCode}`);
+        }
+        map.set(normalizedCode, rate);
     }
     return map;
 }
@@ -127,57 +186,125 @@ function buildEntry(code, igstRate, rateSource) {
     };
 }
 
-async function main() {
-    const hsnCodes = require(HSN_FILE);
-    let excelMap = null;
-    let rateSource = 'chapter-level';
-
-    try {
-        console.log(`Attempting to download CBIC GST rate data from ${CBIC_URL} ...`);
-        const buffer = await downloadExcel(CBIC_URL);
-        excelMap = parseExcel(buffer);
-        if (excelMap.size > 0) {
-            rateSource = 'cbic-excel';
-            console.log(`Parsed ${excelMap.size} rate rows from CBIC Excel.`);
-        } else {
-            console.log('CBIC Excel parsed but contained no usable rows; using fallback.');
-            excelMap = null;
-        }
-    } catch (err) {
-        console.log(`Download/parse failed (${err.message}); using chapter-level fallback.`);
-        excelMap = null;
+function validateWorkbookDownload(downloaded, maxBytes) {
+    if (!downloaded || !Buffer.isBuffer(downloaded.buffer)) {
+        throw new Error('Downloader did not return a workbook buffer');
     }
+    if (downloaded.buffer.length > maxBytes) {
+        throw new Error(`Workbook exceeds ${maxBytes} byte limit`);
+    }
+    const contentType = String(downloaded.contentType || '').split(';')[0].trim().toLowerCase();
+    if (!ALLOWED_CONTENT_TYPES.has(contentType)) {
+        throw new Error(`Unexpected workbook content type: ${contentType || 'missing'}`);
+    }
+    const buffer = downloaded.buffer;
+    const isZip = buffer.length >= 4 && buffer[0] === 0x50 && buffer[1] === 0x4b;
+    const cfbSignature = [0xd0, 0xcf, 0x11, 0xe0, 0xa1, 0xb1, 0x1a, 0xe1];
+    const isCfb = buffer.length >= cfbSignature.length
+        && cfbSignature.every((byte, index) => buffer[index] === byte);
+    if (!isZip && !isCfb) throw new Error('Workbook file signature is invalid');
+}
 
+function buildRates(hsnCodes, excelMap) {
     const rates = [];
     for (const item of hsnCodes) {
         const padded = String(item.code).padStart(8, '0');
-        let igstRate;
-        if (excelMap) {
-            igstRate = excelMap.get(padded);
-            if (igstRate === undefined) igstRate = resolveRate(padded);
-        } else {
-            igstRate = resolveRate(padded);
-        }
+        let igstRate = excelMap.get(padded);
+        if (igstRate === undefined) igstRate = resolveRate(padded);
         if (igstRate === undefined || igstRate === null) continue;
-        rates.push(buildEntry(item.code, igstRate, excelMap && excelMap.has(padded) ? 'cbic-excel' : rateSource));
+        rates.push(buildEntry(item.code, igstRate, excelMap.has(padded) ? 'cbic-excel' : 'chapter-level'));
+    }
+    return rates;
+}
+
+function atomicWriteFile(targetPath, content) {
+    const tempPath = `${targetPath}.${process.pid}.${Date.now()}.tmp`;
+    try {
+        fs.writeFileSync(tempPath, content);
+        fs.renameSync(tempPath, targetPath);
+    } finally {
+        if (fs.existsSync(tempPath)) fs.unlinkSync(tempPath);
+    }
+}
+
+async function refreshRates(options) {
+    const {
+        sourceUrl = process.env.GST_RATE_SOURCE_URL,
+        download = downloadExcel,
+        now = () => new Date(),
+        hsnFile = HSN_FILE,
+        ratesFile = RATES_FILE,
+        metadataFile = METADATA_FILE,
+        minimumRows = MIN_RATE_ROWS,
+        maxBytes = MAX_RESPONSE_BYTES,
+        write = false,
+        writeAtomic = atomicWriteFile
+    } = options || {};
+
+    if (!sourceUrl) {
+        throw new Error('GST_RATE_SOURCE_URL is required; configure an authoritative machine-readable Excel URL');
     }
 
-    fs.writeFileSync(RATES_FILE, JSON.stringify(rates));
-    console.log(`Wrote ${rates.length} rate entries to ${RATES_FILE}.`);
+    const downloaded = await download(sourceUrl);
+    validateWorkbookDownload(downloaded, maxBytes);
+    const excelMap = parseExcel(downloaded.buffer);
+    if (excelMap.size === 0) throw new Error('Authoritative workbook contains no rate rows');
+    if (excelMap.size < minimumRows) {
+        throw new Error(`Authoritative workbook contains only ${excelMap.size} rate rows; minimum is ${minimumRows}`);
+    }
 
-    const metadata = require(METADATA_FILE);
-    const today = new Date().toISOString().split('T')[0];
-    metadata.gstRatesLastUpdated = today;
-    metadata.gstNotificationRef = 'Notification No. 09/2025-CT(Rate) dated 17 Sep 2025';
-    fs.writeFileSync(METADATA_FILE, JSON.stringify(metadata, null, 2) + '\n');
-    console.log(`Updated metadata gstRatesLastUpdated -> ${today}.`);
+    const hsnCodes = JSON.parse(fs.readFileSync(hsnFile, 'utf8'));
+    const knownCodes = new Set(hsnCodes.map(item => String(item.code).padStart(8, '0')));
+    const overlap = [...excelMap.keys()].filter(code => knownCodes.has(code)).length;
+    if (overlap === 0) throw new Error('Authoritative workbook has zero overlap with bundled HSN codes');
+
+    const rates = buildRates(hsnCodes, excelMap);
+    const proposedRates = JSON.stringify(rates);
+    const currentRates = JSON.stringify(JSON.parse(fs.readFileSync(ratesFile, 'utf8')));
+    if (proposedRates === currentRates) {
+        return { changed: false, rateRows: excelMap.size, overlap };
+    }
+
+    if (!write) {
+        return { changed: true, rateRows: excelMap.size, overlap };
+    }
+
+    const metadata = JSON.parse(fs.readFileSync(metadataFile, 'utf8'));
+    metadata.gstRatesLastUpdated = now().toISOString().split('T')[0];
+    metadata.gstRateSource = 'authoritative-excel';
+    const proposedMetadata = JSON.stringify(metadata, null, 2) + '\n';
+
+    writeAtomic(ratesFile, proposedRates);
+    writeAtomic(metadataFile, proposedMetadata);
+    return { changed: true, rateRows: excelMap.size, overlap };
+}
+
+async function main(options) {
+    const result = await refreshRates(options);
+    if (result.changed && options && options.write) {
+        console.log(`Updated GST rates from ${result.rateRows} authoritative rows (${result.overlap} matched codes).`);
+    } else if (result.changed) {
+        console.log(`Validated ${result.rateRows} authoritative rows; material changes require review.`);
+    } else {
+        console.log('Authoritative GST rate content is unchanged; no files written.');
+    }
+    return result;
 }
 
 if (require.main === module) {
-    main().catch((err) => {
-        console.error('Fatal error:', err);
-        process.exit(1);
-    });
+    const write = process.argv.slice(2).includes('--write');
+    const unknownArgs = process.argv.slice(2).filter(arg => arg !== '--check' && arg !== '--write');
+    if (unknownArgs.length > 0 || (write && process.argv.slice(2).includes('--check'))) {
+        console.error('Usage: node scripts/update-gst-rates.js [--check | --write]');
+        process.exitCode = 1;
+    } else {
+        main({ write }).then((result) => {
+            console.log(`GST_RATE_CHANGED=${result.changed}`);
+        }).catch((err) => {
+            console.error('Fatal error:', err);
+            process.exitCode = 1;
+        });
+    }
 }
 
-module.exports = { parseExcel };
+module.exports = { downloadExcel, parseExcel, refreshRates, main };

@@ -28,6 +28,7 @@ export interface HsnStats {
     version: string;
     lastUpdated: string;
     gstRatesLastUpdated: string;
+    gstRateSource: string;
     gstNotificationRef: string;
     totalCodes: number;
     chapterCount: number;

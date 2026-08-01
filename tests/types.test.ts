@@ -26,6 +26,7 @@ const chapter: HsnCode[] = getHsnChapter('52');
 const searched: HsnCode[] = searchHsn('silk', { matchType: 'contains', limit: 10 });
 const stats: HsnStats = getStats();
 const gstRatesLastUpdated: string = stats.gstRatesLastUpdated;
+const gstRateSource: string = stats.gstRateSource;
 const gstNotificationRef: string = stats.gstNotificationRef;
 const summary: ChapterSummary | null = getChapterSummary('52');
 const byKeywords: HsnCode[] = findCodesByDescription(['cotton', 'carded']);
@@ -72,7 +73,7 @@ const gstr1TaxRate: number = gstr1[0].taxRate;
 // Reference all bindings so noUnusedLocals (if enabled) stays quiet.
 void [
   all, byText, byCode, exact, valid, chapter, searched, stats,
-  gstRatesLastUpdated, gstNotificationRef, summary, byKeywords, bulk, rate,
+  gstRatesLastUpdated, gstRateSource, gstNotificationRef, summary, byKeywords, bulk, rate,
   withRate, notificationRef, slab, tax, breakdown, reverse, taxType,
   invoice, grouped, rounded, gstinResult, formatted, stateName, panValid,
   components, allSac, sacEntry, sacSearch, details, csv, json, gstr1Item,

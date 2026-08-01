@@ -184,6 +184,10 @@ hsn.bulkValidateHsnCodes(['52010011', '00000000']);
 
 > **Note:** GST rates are chapter-level mappings derived from **CBIC Notification No. 09/2025-CT(Rate) dated 17 Sep 2025**, effective 2025-09-22. They are a best-effort classification at the chapter level — always confirm against the official notification for legal/billing use.
 
+The bundled fallback was generated on **2026-06-02** and is labeled
+`chapter-level`. `gstRatesLastUpdated` records the date the bundled rate content
+materially changed; it is not a record of background source checks.
+
 ### `getGstRateByCode(code)`
 
 Returns GST rate details for an exact code, or `null`.
@@ -468,7 +472,13 @@ Exported interfaces include `HsnCode`, `SearchOptions`, `HsnStats`, `GstRate`, `
 
 - **HSN/SAC codes:** CBIC / WCO Harmonized System Nomenclature.
 - **GST rates:** CBIC Notification No. 09/2025-CT(Rate) dated 17 Sep 2025 (effective 2025-09-22), mapped at the **chapter level**.
-- GST rate data is refreshed weekly via a GitHub Actions workflow (`.github/workflows/update-gst-rates.yml`).
+- The read-only update workflow checks weekly only when `GST_RATE_SOURCE_URL` is
+  configured with an authoritative machine-readable workbook. Failed,
+  unchanged, and changed checks do not modify repository data. After reviewing
+  a reported difference, a maintainer can run
+  `node scripts/update-gst-rates.js --write` locally and review the resulting
+  diff before committing it. `gstRatesLastUpdated` advances only for that
+  validated material update.
 
 Rates are provided as a developer convenience and classified at chapter granularity. For legal, billing, or filing purposes, verify against the official CBIC notification.
 
