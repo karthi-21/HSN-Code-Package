@@ -451,6 +451,9 @@ hsn gstin 27AAPFU0939F1ZV
 hsn export silk --format json
 ```
 
+The `validate` and `gstin` commands exit with status `0` for a valid identifier
+and status `1` for an invalid identifier or usage error.
+
 ---
 
 ## TypeScript
