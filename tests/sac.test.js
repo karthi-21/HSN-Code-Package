@@ -12,6 +12,18 @@ describe('getAllSac', () => {
     expect(entry).toHaveProperty('code');
     expect(entry).toHaveProperty('description');
   });
+  test('returns the same frozen array with frozen records', () => {
+    const all = getAllSac();
+    const first = all[0];
+    const original = { ...first };
+    expect(all).toBe(getAllSac());
+    expect(Object.isFrozen(all)).toBe(true);
+    expect(Object.isFrozen(first)).toBe(true);
+    expect(() => all.push({ code: 'x', description: 'x' })).toThrow(TypeError);
+    expect(() => { all[0] = { code: 'x', description: 'x' }; }).toThrow(TypeError);
+    expect(() => { first.description = 'changed'; }).toThrow(TypeError);
+    expect(getAllSac()[0]).toEqual(original);
+  });
 });
 
 describe('getSacByCode', () => {
@@ -40,6 +52,14 @@ describe('searchSac', () => {
   test('throws on non-string', () => {
     expect(() => searchSac(null)).toThrow(TypeError);
   });
+  test('returns a reorderable array containing frozen records', () => {
+    const canonicalFirst = getAllSac()[0];
+    const results = searchSac('services', { limit: 5 });
+    expect(Object.isFrozen(results)).toBe(false);
+    expect(Object.isFrozen(results[0])).toBe(true);
+    expect(() => results.reverse()).not.toThrow();
+    expect(getAllSac()[0]).toBe(canonicalFirst);
+  });
 });
 
 describe('getCodeDetails', () => {
@@ -53,5 +73,17 @@ describe('getCodeDetails', () => {
   });
   test('throws on no argument', () => {
     expect(() => getCodeDetails()).toThrow(TypeError);
+  });
+  test('returns mutable defensive copies for SAC and HSN details', () => {
+    const sac = getSacByCode('9954');
+    const sacDetails = getCodeDetails('9954');
+    sacDetails.description = 'changed';
+    expect(getSacByCode('9954').description).toBe(sac.description);
+
+    const { getAllHsn, getHsnByExactCode } = require('../index');
+    const hsn = getAllHsn()[0];
+    const hsnDetails = getCodeDetails(hsn.code);
+    hsnDetails.description = 'changed';
+    expect(getHsnByExactCode(hsn.code).description).toBe(hsn.description);
   });
 });

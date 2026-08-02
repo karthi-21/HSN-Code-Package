@@ -3,12 +3,25 @@
 const path = require('path');
 
 let _cache = null;
+let _hsnCache = null;
+
+function _freezeFlatDataset(records) {
+    records.forEach(record => Object.freeze(record));
+    return Object.freeze(records);
+}
 
 function _load() {
     if (!_cache) {
-        _cache = require(path.join(__dirname, 'data', 'sac_codes.json'));
+        _cache = _freezeFlatDataset(require(path.join(__dirname, 'data', 'sac_codes.json')));
     }
     return _cache;
+}
+
+function _loadHsn() {
+    if (!_hsnCache) {
+        _hsnCache = _freezeFlatDataset(require(path.join(__dirname, 'data', 'hsn_codes.json')));
+    }
+    return _hsnCache;
 }
 
 function _assertString(value, name) {
@@ -75,8 +88,7 @@ function getCodeDetails(code) {
     const query = String(code).trim();
 
     // Load HSN data directly to avoid a circular dependency on ./index.
-    const hsnData = require(path.join(__dirname, 'data', 'hsn_codes.json'));
-    const hsn = hsnData.find(item => item.code === query);
+    const hsn = _loadHsn().find(item => item.code === query);
     if (hsn) return Object.assign({}, hsn, { type: 'HSN' });
 
     const sac = _load().find(item => item.code === query);

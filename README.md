@@ -82,6 +82,11 @@ hsn.getAllHsn();
 // → [ { code: '1011010', description: '...' }, ... ]  (12,604 entries)
 ```
 
+Bundled HSN, SAC, GST-rate, and metadata records are immutable. The canonical
+arrays returned by `getAllHsn()` and `getAllSac()` are also immutable and keep
+the same reference; clone an array or record before modifying it. Search result
+arrays may be reordered, but their records remain immutable.
+
 ### `getCodeByTxt(txt)`
 
 Case-insensitive partial search on the description.
@@ -146,8 +151,11 @@ Returns metadata about the bundled dataset.
 
 ```js
 hsn.getStats();
-// → { version: '2.3.0', lastUpdated: '2026-06-02', totalCodes: 12604,
-//     chapterCount: 86, source: 'CBIC / WCO Harmonized System Nomenclature' }
+// → { version: '2.3.0', lastUpdated: '2026-06-02',
+//     gstRatesLastUpdated: '2026-06-02', gstRateSource: 'chapter-level',
+//     gstNotificationRef: 'Notification No. 09/2025-CT(Rate) dated 17 Sep 2025',
+//     totalCodes: 12604, chapterCount: 86,
+//     source: 'CBIC / WCO Harmonized System Nomenclature' }
 ```
 
 ### `getChapterSummary(chapter)`
@@ -183,6 +191,10 @@ hsn.bulkValidateHsnCodes(['52010011', '00000000']);
 ## GST rate data
 
 > **Note:** GST rates are chapter-level mappings derived from **CBIC Notification No. 09/2025-CT(Rate) dated 17 Sep 2025**, effective 2025-09-22. They are a best-effort classification at the chapter level — always confirm against the official notification for legal/billing use.
+
+The bundled fallback was generated on **2026-06-02** and is labeled
+`chapter-level`. `gstRatesLastUpdated` records the date the bundled rate content
+materially changed; it is not a record of background source checks.
 
 ### `getGstRateByCode(code)`
 
@@ -391,10 +403,18 @@ hsn.exportToCSV(hsn.getCodeByTxt('cotton'));
 // → "code,description\n12072010,..."
 ```
 
-| Option      | Type       | Default                 | Description                       |
-| ----------- | ---------- | ----------------------- | --------------------------------- |
-| `delimiter` | `string`   | `','`                   | Field delimiter.                  |
-| `headers`   | `string[]` | keys of the first row   | Explicit column order/selection.  |
+| Option                    | Type       | Default               | Description                                      |
+| ------------------------- | ---------- | --------------------- | ------------------------------------------------ |
+| `delimiter`               | `string`   | `','`                 | Field delimiter.                                 |
+| `headers`                 | `string[]` | keys of the first row | Explicit column order/selection.                 |
+| `preventFormulaInjection` | `boolean`  | `true`                | Prefix spreadsheet-like string cells with `'`.  |
+
+Formula protection applies to string values and headers beginning with `=` or
+`@`, non-numeric strings beginning with `+` or `-` after optional whitespace,
+and strings beginning with a tab or carriage return. Signed decimal and
+scientific-notation strings such as `-1234.50` and `+1e3` remain unchanged.
+Disable protection only when legacy formula handling is required and the output
+will not be opened by spreadsheet software.
 
 ### `exportToJSON(data, options)`
 
@@ -413,6 +433,13 @@ hsn.generateGSTR1Summary([{ taxableValue: 10000, gstRate: 18, isInterState: fals
 // → [ { taxRate: 18, taxableValue: 10000, igst: 0, cgst: 900, sgst: 900,
 //       cess: 0, totalTax: 1800, count: 1 } ]
 ```
+
+Each item requires a non-negative finite `taxableValue` and either `gstRate` or
+the compatible `igstRate` field. `cessRate` defaults to `0`, and `isInterState`
+defaults to `false`. When both rate fields are supplied, `gstRate` takes
+precedence. Malformed items, non-finite numbers, negative values, and a
+non-boolean `isInterState` throw an indexed field error instead of being
+included in the summary.
 
 ---
 
@@ -440,6 +467,9 @@ hsn gstin 27AAPFU0939F1ZV
 hsn export silk --format json
 ```
 
+The `validate` and `gstin` commands exit with status `0` for a valid identifier
+and status `1` for an invalid identifier or usage error.
+
 ---
 
 ## TypeScript
@@ -461,11 +491,42 @@ Exported interfaces include `HsnCode`, `SearchOptions`, `HsnStats`, `GstRate`, `
 
 - **HSN/SAC codes:** CBIC / WCO Harmonized System Nomenclature.
 - **GST rates:** CBIC Notification No. 09/2025-CT(Rate) dated 17 Sep 2025 (effective 2025-09-22), mapped at the **chapter level**.
-- GST rate data is refreshed weekly via a GitHub Actions workflow (`.github/workflows/update-gst-rates.yml`).
+- The read-only update workflow checks weekly only when `GST_RATE_SOURCE_URL` is
+  configured with an authoritative machine-readable workbook. Failed,
+  unchanged, and changed checks do not modify repository data. After reviewing
+  a reported difference, a maintainer can run
+  `node scripts/update-gst-rates.js --write` locally and review the resulting
+  diff before committing it. `gstRatesLastUpdated` advances only for that
+  validated material update. A workbook must match at least 80% of its rows to
+  bundled HSN codes. Metadata reports `authoritative-excel` only when every
+  generated rate came from the workbook, and `mixed` when chapter-level
+  fallbacks remain.
+- Workbook parsing is intentionally fail-closed. Every populated worksheet row
+  must contain a recognized HSN-code field and GST-rate field; footer, note, or
+  commentary rows abort the refresh and must be removed from the reviewed input
+  before using `--write`.
 
 Rates are provided as a developer convenience and classified at chapter granularity. For legal, billing, or filing purposes, verify against the official CBIC notification.
 
 ## Migrating from v1 / v2.x
+
+### Migrating from v2.x to v3.0
+
+Version 3.0 makes previously permissive behavior explicit and safe:
+
+- `getAllHsn()` and `getAllSac()` return stable, frozen arrays containing frozen
+  records. Clone before modification: `const editable = hsn.getAllHsn().map(row => ({ ...row }))`.
+- `generateGSTR1Summary()` now requires finite, non-negative numeric values and
+  throws indexed errors for malformed entries. Normalize imported strings and
+  supply `taxableValue` plus `gstRate` or `igstRate` before calling it.
+- `exportToCSV()` protects spreadsheet-formula strings by default. Legitimate
+  signed numeric strings remain unchanged. Pass `{ preventFormulaInjection: false }`
+  only when preserving potentially executable spreadsheet input is intentional.
+- Invalid `hsn validate` and `hsn gstin` commands now exit with status `1`.
+- TypeScript models canonical HSN/SAC/rate records and arrays as readonly.
+  `HsnStats` now includes required GST-rate provenance fields.
+
+See [CHANGELOG.md](CHANGELOG.md) for the complete release summary.
 
 | From      | Change                                                                                   |
 | --------- | ---------------------------------------------------------------------------------------- |
@@ -473,8 +534,10 @@ Rates are provided as a developer convenience and classified at chapter granular
 | v2.0–v2.1 | Added GST calculation utilities (`calculateTax`, `calculateGSTBreakdown`, …). No breaking changes to HSN lookup functions. |
 | v2.2      | Added GSTIN/PAN validation, SAC codes, export utilities, and the `hsn` CLI. No breaking changes. |
 | v2.3      | Added GST rate data (`getGstRateByCode`, `getHsnByExactCodeWithRate`, `getHsnByRateSlabs`) and advanced HSN lookups. No breaking changes. |
+| v3.0      | Hardened validation, exports, CLI statuses, immutable data, rate ingestion, and TypeScript contracts. See the migration notes above. |
 
-No function signatures or return shapes changed within the 2.x line — upgrades are additive.
+No function signatures or return shapes changed within the published 2.x line;
+the safety changes described above begin in 3.0.
 
 ## Live demo
 

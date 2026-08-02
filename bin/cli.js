@@ -60,6 +60,7 @@ switch (command) {
       console.log(`  Description: ${entry.description}`);
     } else {
       console.log(red(`✗ Invalid HSN code: ${code}`));
+      process.exitCode = 1;
     }
     break;
   }
@@ -96,6 +97,7 @@ switch (command) {
       console.log(`  Check Digit:   ${c.checkDigit}`);
     } else {
       console.log(red(`✗ Invalid GSTIN: ${result.error}`));
+      process.exitCode = 1;
     }
     break;
   }

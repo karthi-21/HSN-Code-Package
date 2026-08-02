@@ -7,13 +7,23 @@
  * rate data being added to the dataset — see issue #2). You pass the rate in.
  */
 
-function _assertNumber(value, name) {
-    if (typeof value !== 'number' || Number.isNaN(value)) {
-        throw new TypeError(`${name} must be a number, got ${value}`);
+function _assertFiniteNumber(value, name) {
+    if (typeof value !== 'number' || !Number.isFinite(value)) {
+        throw new TypeError(`${name} must be a finite number, got ${value}`);
     }
+}
+
+function _assertNumber(value, name) {
+    _assertFiniteNumber(value, name);
     if (value < 0) {
         throw new RangeError(`${name} must not be negative, got ${value}`);
     }
+}
+
+function _roundToCents(value) {
+    const magnitude = Math.round((Math.abs(value) + Number.EPSILON) * 100) / 100;
+    if (magnitude === 0) return 0;
+    return Math.sign(value) * magnitude;
 }
 
 /**
@@ -24,7 +34,7 @@ function _assertNumber(value, name) {
  */
 function applyRoundOffRules(amount) {
     _assertNumber(amount, 'amount');
-    return Math.round((amount + Number.EPSILON) * 100) / 100;
+    return _roundToCents(amount);
 }
 
 /**
@@ -155,7 +165,9 @@ function calculateInvoiceTotals(items, isInterState) {
 
     const rawGrandTotal = acc.totalTaxableValue + acc.totalTax;
     const grandTotal = applyRoundOffRules(Math.round(rawGrandTotal));
-    const roundOff = applyRoundOffRules(grandTotal - rawGrandTotal);
+    const rawRoundOff = grandTotal - rawGrandTotal;
+    _assertFiniteNumber(rawRoundOff, 'roundOff');
+    const roundOff = _roundToCents(rawRoundOff);
 
     return {
         totalTaxableValue: applyRoundOffRules(acc.totalTaxableValue),
