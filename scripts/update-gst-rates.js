@@ -22,6 +22,7 @@ const NOTIFICATION_REF = 'Notification No. 09/2025-CT(Rate)';
 const MAX_REDIRECTS = 3;
 const MAX_RESPONSE_BYTES = 10 * 1024 * 1024;
 const MIN_RATE_ROWS = 100;
+const MIN_OVERLAP_RATIO = 0.8;
 const DOWNLOAD_TIMEOUT_MS = 15000;
 const ALLOWED_CONTENT_TYPES = new Set([
     'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
@@ -217,14 +218,29 @@ function buildRates(hsnCodes, excelMap) {
     return rates;
 }
 
-function atomicWriteFile(targetPath, content) {
-    const tempPath = `${targetPath}.${process.pid}.${Date.now()}.tmp`;
+function stagedWriteFiles(files) {
+    const stamp = `${process.pid}.${Date.now()}`;
+    const staged = files.map(({ targetPath, content }, index) => ({
+        targetPath,
+        content,
+        tempPath: `${targetPath}.${stamp}.${index}.tmp`
+    }));
     try {
-        fs.writeFileSync(tempPath, content);
-        fs.renameSync(tempPath, targetPath);
+        for (const file of staged) fs.writeFileSync(file.tempPath, file.content);
+        for (const file of staged) fs.renameSync(file.tempPath, file.targetPath);
     } finally {
-        if (fs.existsSync(tempPath)) fs.unlinkSync(tempPath);
+        for (const file of staged) {
+            if (fs.existsSync(file.tempPath)) fs.unlinkSync(file.tempPath);
+        }
     }
+}
+
+function summarizeRateSource(rates) {
+    const authoritativeCount = rates.filter(rate => rate.rateSource === 'cbic-excel').length;
+    const fallbackCount = rates.length - authoritativeCount;
+    if (authoritativeCount === 0) return 'chapter-level';
+    if (fallbackCount === 0) return 'authoritative-excel';
+    return 'mixed';
 }
 
 async function refreshRates(options) {
@@ -236,9 +252,10 @@ async function refreshRates(options) {
         ratesFile = RATES_FILE,
         metadataFile = METADATA_FILE,
         minimumRows = MIN_RATE_ROWS,
+        minimumOverlapRatio = MIN_OVERLAP_RATIO,
         maxBytes = MAX_RESPONSE_BYTES,
         write = false,
-        writeAtomic = atomicWriteFile
+        writeBatch = stagedWriteFiles
     } = options || {};
 
     if (!sourceUrl) {
@@ -257,26 +274,35 @@ async function refreshRates(options) {
     const knownCodes = new Set(hsnCodes.map(item => String(item.code).padStart(8, '0')));
     const overlap = [...excelMap.keys()].filter(code => knownCodes.has(code)).length;
     if (overlap === 0) throw new Error('Authoritative workbook has zero overlap with bundled HSN codes');
+    const overlapRatio = overlap / excelMap.size;
+    if (overlapRatio < minimumOverlapRatio) {
+        throw new Error(
+            `Authoritative workbook overlap is ${(overlapRatio * 100).toFixed(1)}%; minimum is ${(minimumOverlapRatio * 100).toFixed(1)}%`
+        );
+    }
 
     const rates = buildRates(hsnCodes, excelMap);
+    const rateSource = summarizeRateSource(rates);
     const proposedRates = JSON.stringify(rates);
     const currentRates = JSON.stringify(JSON.parse(fs.readFileSync(ratesFile, 'utf8')));
     if (proposedRates === currentRates) {
-        return { changed: false, rateRows: excelMap.size, overlap };
+        return { changed: false, rateRows: excelMap.size, overlap, rateSource };
     }
 
     if (!write) {
-        return { changed: true, rateRows: excelMap.size, overlap };
+        return { changed: true, rateRows: excelMap.size, overlap, rateSource };
     }
 
     const metadata = JSON.parse(fs.readFileSync(metadataFile, 'utf8'));
     metadata.gstRatesLastUpdated = now().toISOString().split('T')[0];
-    metadata.gstRateSource = 'authoritative-excel';
+    metadata.gstRateSource = rateSource;
     const proposedMetadata = JSON.stringify(metadata, null, 2) + '\n';
 
-    writeAtomic(ratesFile, proposedRates);
-    writeAtomic(metadataFile, proposedMetadata);
-    return { changed: true, rateRows: excelMap.size, overlap };
+    writeBatch([
+        { targetPath: ratesFile, content: proposedRates },
+        { targetPath: metadataFile, content: proposedMetadata }
+    ]);
+    return { changed: true, rateRows: excelMap.size, overlap, rateSource };
 }
 
 async function main(options) {
@@ -307,4 +333,4 @@ if (require.main === module) {
     }
 }
 
-module.exports = { downloadExcel, parseExcel, refreshRates, main };
+module.exports = { downloadExcel, parseExcel, refreshRates, stagedWriteFiles, main };

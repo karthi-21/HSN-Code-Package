@@ -6,7 +6,7 @@ const path = require('path');
 const { spawnSync } = require('child_process');
 const { EventEmitter } = require('events');
 const xlsx = require('xlsx');
-const { downloadExcel, parseExcel, refreshRates, main } = require('../scripts/update-gst-rates');
+const { downloadExcel, parseExcel, refreshRates, stagedWriteFiles, main } = require('../scripts/update-gst-rates');
 
 const XLSX_CONTENT_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
 const tempDirs = [];
@@ -84,6 +84,7 @@ function refreshOptions(fixture, download, overrides) {
         ratesFile: fixture.ratesFile,
         metadataFile: fixture.metadataFile,
         minimumRows: 2,
+        minimumOverlapRatio: 0.8,
         now: () => new Date('2026-08-02T00:00:00Z'),
         ...overrides
     };
@@ -168,6 +169,14 @@ describe('parseExcel', () => {
     test('returns an empty map for a workbook without data rows', () => {
         expect(parseExcel(workbookBuffer([['HSN', 'Rate']]))).toEqual(new Map());
     });
+
+    test('fails closed when a populated footer or notes row lacks rate data', () => {
+        expect(() => parseExcel(workbookBuffer([
+            ['HSN', 'Rate'],
+            ['52010011', 18],
+            ['Note: verify against the notification', '']
+        ]))).toThrow('missing a GST rate');
+    });
 });
 
 describe('downloadExcel', () => {
@@ -216,14 +225,14 @@ describe('refreshRates', () => {
     test('check mode reports material differences without writing', async () => {
         const fixture = createFixture();
         const before = fixtureBytes(fixture);
-        const writeAtomic = jest.fn();
+        const writeBatch = jest.fn();
         const result = await refreshRates(refreshOptions(
             fixture,
             async () => downloadedWorkbook(validRows),
-            { writeAtomic }
+            { writeBatch }
         ));
-        expect(result).toEqual({ changed: true, rateRows: 2, overlap: 2 });
-        expect(writeAtomic).not.toHaveBeenCalled();
+        expect(result).toEqual({ changed: true, rateRows: 2, overlap: 2, rateSource: 'mixed' });
+        expect(writeBatch).not.toHaveBeenCalled();
         expectBytesUnchanged(fixture, before);
     });
 
@@ -239,19 +248,53 @@ describe('refreshRates', () => {
         ]);
         const metadataAfterWrite = JSON.parse(fs.readFileSync(fixture.metadataFile, 'utf8'));
         expect(metadataAfterWrite.gstRatesLastUpdated).toBe('2026-08-02');
-        expect(metadataAfterWrite.gstRateSource).toBe('authoritative-excel');
+        expect(metadataAfterWrite.gstRateSource).toBe('mixed');
 
         const afterFirst = fixtureBytes(fixture);
-        const writeAtomic = jest.fn();
+        const writeBatch = jest.fn();
         const second = await refreshRates(refreshOptions(
             fixture,
             download,
-            { write: true, now: () => new Date('2026-08-03T00:00:00Z'), writeAtomic }
+            { write: true, now: () => new Date('2026-08-03T00:00:00Z'), writeBatch }
         ));
         expect(second.changed).toBe(false);
-        expect(writeAtomic).not.toHaveBeenCalled();
+        expect(second.rateSource).toBe('mixed');
+        expect(writeBatch).not.toHaveBeenCalled();
         expectBytesUnchanged(fixture, afterFirst);
         expect(JSON.parse(afterFirst.metadata).gstRatesLastUpdated).toBe('2026-08-02');
+    });
+
+    test('uses authoritative provenance only when every generated rate came from the workbook', async () => {
+        const fixture = createFixture();
+        const rows = [
+            ['HSN', 'Rate'],
+            ['52010011', 18],
+            ['52010012', 12],
+            ['01011010', 0]
+        ];
+        const result = await refreshRates(refreshOptions(
+            fixture,
+            async () => downloadedWorkbook(rows),
+            { write: true }
+        ));
+        expect(result.rateSource).toBe('authoritative-excel');
+        expect(JSON.parse(fs.readFileSync(fixture.metadataFile, 'utf8')).gstRateSource)
+            .toBe('authoritative-excel');
+    });
+
+    test('passes both proposed files to one staged write batch', async () => {
+        const fixture = createFixture();
+        const writeBatch = jest.fn();
+        await refreshRates(refreshOptions(
+            fixture,
+            async () => downloadedWorkbook(validRows),
+            { write: true, writeBatch }
+        ));
+        expect(writeBatch).toHaveBeenCalledTimes(1);
+        expect(writeBatch.mock.calls[0][0].map(file => file.targetPath)).toEqual([
+            fixture.ratesFile,
+            fixture.metadataFile
+        ]);
     });
 
     test.each([
@@ -267,7 +310,8 @@ describe('refreshRates', () => {
         ['invalid negative rate', async () => downloadedWorkbook([['HSN', 'Rate'], ['52010011', -1], ['52010012', 12]]), {}, 'invalid GST rate'],
         ['non-finite rate', async () => downloadedWorkbook([['HSN', 'Rate'], ['52010011', 'Infinity'], ['52010012', 12]]), {}, 'invalid GST rate'],
         ['oversized response', async () => downloadedWorkbook(validRows), { maxBytes: 10 }, 'byte limit'],
-        ['zero overlap', async () => downloadedWorkbook([['HSN', 'Rate'], ['99990001', 5], ['99990002', 12]]), {}, 'zero overlap']
+        ['zero overlap', async () => downloadedWorkbook([['HSN', 'Rate'], ['99990001', 5], ['99990002', 12]]), {}, 'zero overlap'],
+        ['low overlap', async () => downloadedWorkbook([['HSN', 'Rate'], ['52010011', 5], ['99990002', 12]]), {}, 'overlap is 50.0%']
     ])('rejects %s and leaves existing files byte-identical', async (_label, download, overrides, message) => {
         const fixture = createFixture();
         const before = fixtureBytes(fixture);
@@ -287,6 +331,26 @@ describe('refreshRates', () => {
             metadataFile: fixture.metadataFile
         })).rejects.toThrow('GST_RATE_SOURCE_URL is required');
         expectBytesUnchanged(fixture, before);
+    });
+});
+
+describe('stagedWriteFiles', () => {
+    test('replaces all staged targets and leaves no temporary files behind', () => {
+        const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'hsn-staged-write-'));
+        tempDirs.push(tempDir);
+        const first = path.join(tempDir, 'first.json');
+        const second = path.join(tempDir, 'second.json');
+        fs.writeFileSync(first, 'old-first');
+        fs.writeFileSync(second, 'old-second');
+
+        stagedWriteFiles([
+            { targetPath: first, content: 'new-first' },
+            { targetPath: second, content: 'new-second' }
+        ]);
+
+        expect(fs.readFileSync(first, 'utf8')).toBe('new-first');
+        expect(fs.readFileSync(second, 'utf8')).toBe('new-second');
+        expect(fs.readdirSync(tempDir).sort()).toEqual(['first.json', 'second.json']);
     });
 });
 

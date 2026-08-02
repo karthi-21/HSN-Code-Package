@@ -28,7 +28,7 @@ export interface HsnStats {
     readonly version: string;
     readonly lastUpdated: string;
     readonly gstRatesLastUpdated: string;
-    readonly gstRateSource: string;
+    readonly gstRateSource: 'chapter-level' | 'mixed' | 'authoritative-excel';
     readonly gstNotificationRef: string;
     readonly totalCodes: number;
     readonly chapterCount: number;

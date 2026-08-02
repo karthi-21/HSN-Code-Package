@@ -34,6 +34,19 @@ describe('exportToCSV', () => {
   test('does not alter numbers or booleans', () => {
     expect(exportToCSV([{ amount: -10, enabled: true }])).toBe('amount,enabled\n-10,true');
   });
+  test.each([
+    ['negative integer', '-1234'],
+    ['negative decimal', '-1234.50'],
+    ['positive decimal', '+1234.50'],
+    ['leading decimal', '-.75'],
+    ['scientific notation', '-1.25e+3'],
+    ['leading whitespace', '  -1234.50']
+  ])('preserves legitimate %s strings: %s', (_label, value) => {
+    expect(exportToCSV([{ value }])).toBe(`value\n${value}`);
+  });
+  test.each(['-2+3', '+1-2', '-Infinity', '+0x10'])('still neutralizes non-numeric signed text: %s', (value) => {
+    expect(exportToCSV([{ value }])).toBe(`value\n'${value}`);
+  });
   test('allows formula protection to be disabled while still quoting carriage returns', () => {
     expect(exportToCSV([{ value: '=1+1' }], { preventFormulaInjection: false })).toBe('value\n=1+1');
     expect(exportToCSV([{ value: '\rformula' }], { preventFormulaInjection: false })).toBe('value\n"\rformula"');

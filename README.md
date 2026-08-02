@@ -151,8 +151,11 @@ Returns metadata about the bundled dataset.
 
 ```js
 hsn.getStats();
-// → { version: '2.3.0', lastUpdated: '2026-06-02', totalCodes: 12604,
-//     chapterCount: 86, source: 'CBIC / WCO Harmonized System Nomenclature' }
+// → { version: '2.3.0', lastUpdated: '2026-06-02',
+//     gstRatesLastUpdated: '2026-06-02', gstRateSource: 'chapter-level',
+//     gstNotificationRef: 'Notification No. 09/2025-CT(Rate) dated 17 Sep 2025',
+//     totalCodes: 12604, chapterCount: 86,
+//     source: 'CBIC / WCO Harmonized System Nomenclature' }
 ```
 
 ### `getChapterSummary(chapter)`
@@ -406,10 +409,12 @@ hsn.exportToCSV(hsn.getCodeByTxt('cotton'));
 | `headers`                 | `string[]` | keys of the first row | Explicit column order/selection.                 |
 | `preventFormulaInjection` | `boolean`  | `true`                | Prefix spreadsheet-like string cells with `'`.  |
 
-Formula protection applies to string values and headers beginning with `=`,
-`+`, `-`, or `@` after optional whitespace, and to strings beginning with a tab
-or carriage return. Disable it only when legacy formula handling is required
-and the output will not be opened by spreadsheet software.
+Formula protection applies to string values and headers beginning with `=` or
+`@`, non-numeric strings beginning with `+` or `-` after optional whitespace,
+and strings beginning with a tab or carriage return. Signed decimal and
+scientific-notation strings such as `-1234.50` and `+1e3` remain unchanged.
+Disable protection only when legacy formula handling is required and the output
+will not be opened by spreadsheet software.
 
 ### `exportToJSON(data, options)`
 
@@ -492,11 +497,36 @@ Exported interfaces include `HsnCode`, `SearchOptions`, `HsnStats`, `GstRate`, `
   a reported difference, a maintainer can run
   `node scripts/update-gst-rates.js --write` locally and review the resulting
   diff before committing it. `gstRatesLastUpdated` advances only for that
-  validated material update.
+  validated material update. A workbook must match at least 80% of its rows to
+  bundled HSN codes. Metadata reports `authoritative-excel` only when every
+  generated rate came from the workbook, and `mixed` when chapter-level
+  fallbacks remain.
+- Workbook parsing is intentionally fail-closed. Every populated worksheet row
+  must contain a recognized HSN-code field and GST-rate field; footer, note, or
+  commentary rows abort the refresh and must be removed from the reviewed input
+  before using `--write`.
 
 Rates are provided as a developer convenience and classified at chapter granularity. For legal, billing, or filing purposes, verify against the official CBIC notification.
 
 ## Migrating from v1 / v2.x
+
+### Migrating from v2.x to v3.0
+
+Version 3.0 makes previously permissive behavior explicit and safe:
+
+- `getAllHsn()` and `getAllSac()` return stable, frozen arrays containing frozen
+  records. Clone before modification: `const editable = hsn.getAllHsn().map(row => ({ ...row }))`.
+- `generateGSTR1Summary()` now requires finite, non-negative numeric values and
+  throws indexed errors for malformed entries. Normalize imported strings and
+  supply `taxableValue` plus `gstRate` or `igstRate` before calling it.
+- `exportToCSV()` protects spreadsheet-formula strings by default. Legitimate
+  signed numeric strings remain unchanged. Pass `{ preventFormulaInjection: false }`
+  only when preserving potentially executable spreadsheet input is intentional.
+- Invalid `hsn validate` and `hsn gstin` commands now exit with status `1`.
+- TypeScript models canonical HSN/SAC/rate records and arrays as readonly.
+  `HsnStats` now includes required GST-rate provenance fields.
+
+See [CHANGELOG.md](CHANGELOG.md) for the complete release summary.
 
 | From      | Change                                                                                   |
 | --------- | ---------------------------------------------------------------------------------------- |
@@ -504,8 +534,10 @@ Rates are provided as a developer convenience and classified at chapter granular
 | v2.0–v2.1 | Added GST calculation utilities (`calculateTax`, `calculateGSTBreakdown`, …). No breaking changes to HSN lookup functions. |
 | v2.2      | Added GSTIN/PAN validation, SAC codes, export utilities, and the `hsn` CLI. No breaking changes. |
 | v2.3      | Added GST rate data (`getGstRateByCode`, `getHsnByExactCodeWithRate`, `getHsnByRateSlabs`) and advanced HSN lookups. No breaking changes. |
+| v3.0      | Hardened validation, exports, CLI statuses, immutable data, rate ingestion, and TypeScript contracts. See the migration notes above. |
 
-No function signatures or return shapes changed within the 2.x line — upgrades are additive.
+No function signatures or return shapes changed within the published 2.x line;
+the safety changes described above begin in 3.0.
 
 ## Live demo
 

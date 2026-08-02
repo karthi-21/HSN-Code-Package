@@ -20,9 +20,10 @@ function _assertNumber(value, name) {
     }
 }
 
-function _roundSignedFinite(value, name) {
-    _assertFiniteNumber(value, name);
-    return Math.round((value + Number.EPSILON) * 100) / 100;
+function _roundToCents(value) {
+    const magnitude = Math.round((Math.abs(value) + Number.EPSILON) * 100) / 100;
+    if (magnitude === 0) return 0;
+    return Math.sign(value) * magnitude;
 }
 
 /**
@@ -33,7 +34,7 @@ function _roundSignedFinite(value, name) {
  */
 function applyRoundOffRules(amount) {
     _assertNumber(amount, 'amount');
-    return _roundSignedFinite(amount, 'amount');
+    return _roundToCents(amount);
 }
 
 /**
@@ -164,7 +165,9 @@ function calculateInvoiceTotals(items, isInterState) {
 
     const rawGrandTotal = acc.totalTaxableValue + acc.totalTax;
     const grandTotal = applyRoundOffRules(Math.round(rawGrandTotal));
-    const roundOff = _roundSignedFinite(grandTotal - rawGrandTotal, 'roundOff');
+    const rawRoundOff = grandTotal - rawGrandTotal;
+    _assertFiniteNumber(rawRoundOff, 'roundOff');
+    const roundOff = _roundToCents(rawRoundOff);
 
     return {
         totalTaxableValue: applyRoundOffRules(acc.totalTaxableValue),

@@ -8,11 +8,17 @@ function exportToCSV(data, options) {
   }
   if (data.length === 0) return '';
   const keys = headers || Object.keys(data[0]);
+  function isSignedNumericString(value) {
+    return /^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?$/.test(value.trim());
+  }
   function escape(val) {
     let safeVal = val;
     if (preventFormulaInjection && typeof safeVal === 'string') {
       const firstNonWhitespace = safeVal.match(/\S/);
-      const startsWithFormula = firstNonWhitespace && '=+-@'.includes(firstNonWhitespace[0]);
+      const firstCharacter = firstNonWhitespace && firstNonWhitespace[0];
+      const startsWithFormula = firstCharacter === '='
+        || firstCharacter === '@'
+        || ((firstCharacter === '+' || firstCharacter === '-') && !isSignedNumericString(safeVal));
       if (startsWithFormula || safeVal.startsWith('\t') || safeVal.startsWith('\r')) {
         safeVal = `'${safeVal}`;
       }

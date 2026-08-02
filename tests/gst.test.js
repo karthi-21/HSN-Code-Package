@@ -134,6 +134,14 @@ describe('calculateInvoiceTotals', () => {
         expect(t.grandTotal).toBe(118);
         expect(t.roundOff).toBe(-0.29);
     });
+    test('rounds signed half-cent adjustments symmetrically and never returns negative zero', () => {
+        const downwardTie = calculateInvoiceTotals([{ taxableValue: 100.005, gstRate: 0 }], false);
+        expect(downwardTie.roundOff).toBe(-0.01);
+
+        const exactTotal = calculateInvoiceTotals([{ taxableValue: 100, gstRate: 0 }], false);
+        expect(exactTotal.roundOff).toBe(0);
+        expect(Object.is(exactTotal.roundOff, -0)).toBe(false);
+    });
     test('throws on non-array', () => {
         expect(() => calculateInvoiceTotals('x', false)).toThrow(TypeError);
     });
