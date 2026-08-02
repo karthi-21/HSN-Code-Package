@@ -23,14 +23,15 @@ jobs:
     name: Publish to npm
     needs: test
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write # mints the OIDC token npm trades for publish rights
+      contents: read
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24 # ships npm >= 11.5.1, required for trusted publishing
           registry-url: 'https://registry.npmjs.org'
-          cache: 'npm'
+          package-manager-cache: false # never publish from a restored cache
       - run: npm ci
       - run: npm publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
