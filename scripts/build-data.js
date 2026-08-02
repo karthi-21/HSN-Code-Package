@@ -7,7 +7,7 @@
 
 const path = require('path');
 const fs = require('fs');
-const excelToJson = require('convert-excel-to-json');
+const xlsx = require('xlsx');
 
 const ROOT = path.join(__dirname, '..');
 const SOURCE_XLSX = path.join(ROOT, 'code_list.xlsx');
@@ -15,39 +15,48 @@ const OUTPUT_DIR = path.join(ROOT, 'data');
 const OUTPUT_JSON = path.join(OUTPUT_DIR, 'hsn_codes.json');
 const METADATA_JSON = path.join(OUTPUT_DIR, 'metadata.json');
 
-if (!fs.existsSync(SOURCE_XLSX)) {
-    console.error(`ERROR: Source file not found: ${SOURCE_XLSX}`);
-    process.exit(1);
+function parseHsnWorkbook(sourcePath) {
+    const workbook = xlsx.readFile(sourcePath);
+    const sheet = workbook.Sheets.Sheet1;
+    if (!sheet) throw new Error('Workbook must contain a Sheet1 worksheet');
+
+    const rows = xlsx.utils.sheet_to_json(sheet, { header: 1, defval: '' });
+    return rows.slice(3)
+        .map(row => ({
+            code: String(row[0] == null ? '' : row[0]).trim(),
+            description: String(row[1] == null ? '' : row[1]).trim()
+        }))
+        .filter(row => row.code !== '' && row.description !== '');
 }
 
-console.log('Reading:', SOURCE_XLSX);
+function main() {
+    if (!fs.existsSync(SOURCE_XLSX)) {
+        console.error(`ERROR: Source file not found: ${SOURCE_XLSX}`);
+        process.exit(1);
+    }
 
-const raw = excelToJson({
-    sourceFile: SOURCE_XLSX,
-    header: { rows: 3 },
-    columnToKey: { B: 'code', C: 'description' }
-});
+    console.log('Reading:', SOURCE_XLSX);
 
-const codes = (raw.Sheet1 || [])
-    .filter(row => row.code !== undefined && row.description !== undefined)
-    .map(row => ({
-        code: String(row.code).trim(),
-        description: String(row.description).trim()
-    }));
+    const codes = parseHsnWorkbook(SOURCE_XLSX);
 
-if (!fs.existsSync(OUTPUT_DIR)) fs.mkdirSync(OUTPUT_DIR, { recursive: true });
+    if (!fs.existsSync(OUTPUT_DIR)) fs.mkdirSync(OUTPUT_DIR, { recursive: true });
 
-fs.writeFileSync(OUTPUT_JSON, JSON.stringify(codes, null, 2), 'utf8');
+    fs.writeFileSync(OUTPUT_JSON, JSON.stringify(codes, null, 2), 'utf8');
 
-const chapters = new Set(codes.map(c => c.code.slice(0, 2)));
-const metadata = {
-    version: '2.0.0',
-    lastUpdated: new Date().toISOString().slice(0, 10),
-    totalCodes: codes.length,
-    chapterCount: chapters.size,
-    source: 'CBIC / WCO Harmonized System Nomenclature'
-};
+    const chapters = new Set(codes.map(c => c.code.slice(0, 2)));
+    const metadata = {
+        version: '2.0.0',
+        lastUpdated: new Date().toISOString().slice(0, 10),
+        totalCodes: codes.length,
+        chapterCount: chapters.size,
+        source: 'CBIC / WCO Harmonized System Nomenclature'
+    };
 
-fs.writeFileSync(METADATA_JSON, JSON.stringify(metadata, null, 2), 'utf8');
+    fs.writeFileSync(METADATA_JSON, JSON.stringify(metadata, null, 2), 'utf8');
 
-console.log(`Done. ${codes.length} HSN codes across ${chapters.size} chapters written to data/`);
+    console.log(`Done. ${codes.length} HSN codes across ${chapters.size} chapters written to data/`);
+}
+
+if (require.main === module) main();
+
+module.exports = { parseHsnWorkbook };

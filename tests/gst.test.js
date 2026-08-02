@@ -19,6 +19,9 @@ describe('applyRoundOffRules', () => {
     test('throws on non-number', () => {
         expect(() => applyRoundOffRules('x')).toThrow(TypeError);
     });
+    test.each([NaN, Infinity, -Infinity])('throws on non-finite input %p', (amount) => {
+        expect(() => applyRoundOffRules(amount)).toThrow(TypeError);
+    });
     test('throws on negative', () => {
         expect(() => applyRoundOffRules(-1)).toThrow(RangeError);
     });
@@ -39,6 +42,13 @@ describe('calculateTax', () => {
     test('throws on invalid input', () => {
         expect(() => calculateTax(null, 18)).toThrow(TypeError);
         expect(() => calculateTax(100, 'x')).toThrow(TypeError);
+    });
+    test('rejects negative and non-finite amounts and rates', () => {
+        expect(() => calculateTax(-1, 18)).toThrow(RangeError);
+        expect(() => calculateTax(100, -1)).toThrow(RangeError);
+        expect(() => calculateTax(NaN, 18)).toThrow(TypeError);
+        expect(() => calculateTax(100, Infinity)).toThrow(TypeError);
+        expect(() => calculateTax(100, -Infinity)).toThrow(TypeError);
     });
 });
 
@@ -114,6 +124,23 @@ describe('calculateInvoiceTotals', () => {
         const t = calculateInvoiceTotals([{ taxableValue: 100.5, gstRate: 18 }], false);
         expect(Number.isInteger(t.grandTotal)).toBe(true);
         expect(typeof t.roundOff).toBe('number');
+    });
+    test('supports downward invoice round-off without changing tax totals', () => {
+        const t = calculateInvoiceTotals([{ taxableValue: 100.25, gstRate: 18 }], false);
+        expect(t.totalTaxableValue).toBe(100.25);
+        expect(t.totalCGST).toBe(9.02);
+        expect(t.totalSGST).toBe(9.02);
+        expect(t.totalTax).toBe(18.04);
+        expect(t.grandTotal).toBe(118);
+        expect(t.roundOff).toBe(-0.29);
+    });
+    test('rounds signed half-cent adjustments symmetrically and never returns negative zero', () => {
+        const downwardTie = calculateInvoiceTotals([{ taxableValue: 100.005, gstRate: 0 }], false);
+        expect(downwardTie.roundOff).toBe(-0.01);
+
+        const exactTotal = calculateInvoiceTotals([{ taxableValue: 100, gstRate: 0 }], false);
+        expect(exactTotal.roundOff).toBe(0);
+        expect(Object.is(exactTotal.roundOff, -0)).toBe(false);
     });
     test('throws on non-array', () => {
         expect(() => calculateInvoiceTotals('x', false)).toThrow(TypeError);

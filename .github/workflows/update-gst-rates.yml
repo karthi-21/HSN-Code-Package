@@ -4,18 +4,13 @@ on:
   schedule:
     - cron: '0 8 * * 1'  # Every Monday 8 AM UTC
   workflow_dispatch:
-    inputs:
-      force_update:
-        description: 'Force update even if no changes detected'
-        required: false
-        default: 'false'
-        type: boolean
 
 jobs:
   update-rates:
+    if: ${{ vars.GST_RATE_SOURCE_URL != '' }}
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      contents: read
       issues: write
 
     steps:
@@ -34,31 +29,33 @@ jobs:
         run: npm ci
 
       - name: Run GST rates update script
-        id: update
-        run: |
-          node scripts/update-gst-rates.js
-        continue-on-error: true
-
-      - name: Check for changes
         id: check
+        env:
+          GST_RATE_SOURCE_URL: ${{ vars.GST_RATE_SOURCE_URL }}
         run: |
-          if git diff --quiet data/gst_rates.json data/metadata.json 2>/dev/null; then
-            echo "changed=false" >> $GITHUB_OUTPUT
+          result=$(node scripts/update-gst-rates.js --check)
+          echo "$result"
+          if [[ "$result" == *"GST_RATE_CHANGED=true"* ]]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
           else
-            echo "changed=true" >> $GITHUB_OUTPUT
+            echo "changed=false" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Commit and push if changed
-        if: steps.check.outputs.changed == 'true' || github.event.inputs.force_update == 'true'
-        run: |
-          git config user.name "hsn-rate-bot"
-          git config user.email "bot@hsn-code-package.dev"
-          git add data/gst_rates.json data/metadata.json
-          git commit -m "chore: update GST rates [$(date -u '+%Y-%m-%d')]"
-          git push origin HEAD
+      - name: Open review issue when rates differ
+        if: steps.check.outputs.changed == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '[Bot] Authoritative GST rate changes require review',
+              body: `The configured authoritative workbook differs from the committed GST rate data. No repository files were changed.\n\nReview workflow run: ${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
+              labels: ['automated']
+            });
 
       - name: Open issue on failure
-        if: steps.update.outcome == 'failure'
+        if: failure()
         uses: actions/github-script@v7
         with:
           script: |
